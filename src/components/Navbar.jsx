@@ -5,9 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 
-// ============================================================
-// ✅ CONFIG
-// ============================================================
+
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -22,7 +20,7 @@ const DROPDOWN_ITEMS = [
   { key: "settings", label: "Settings",   href: "/dashboard/settings" },
 ];
 
-// ============================================================
+
 
 export default function AppNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +32,7 @@ export default function AppNavbar() {
   const { data: session, isPending } = useSession();
   const user = session?.user ?? null;
 
-  // close dropdown when clicking outside
+ 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -142,8 +140,7 @@ export default function AppNavbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-emerald-600 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
-                >
+                  className="text-sm font-medium text-gray-600 hover:text-emerald-600 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors">
                   Login
                 </Link>
                 <Link
@@ -196,16 +193,11 @@ export default function AppNavbar() {
                   href={href}
                   onClick={() => setIsDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  {label}
-                </Link>
+                >{label}</Link>
               ))}
               <button
                 onClick={handleSignOut}
-                className="block w-full text-left py-3 text-sm text-red-500 font-medium"
-              >
-                Logout
-              </button>
+                className="block w-full text-left py-3 text-sm text-red-500 font-medium">Logout</button>
             </>
           ) : (
             <>
