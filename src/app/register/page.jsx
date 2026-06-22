@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUp, signIn } from "@/lib/auth-client";
+import { signUp, signOut, signIn } from "@/lib/auth-client";
 
 const ROLES = [
   {
@@ -36,36 +36,40 @@ const ROLES = [
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm]       = useState({ name: "", email: "", location: "", password: "" });
-  const [role, setRole]       = useState("buyer");
+  const [form, setForm]         = useState({ name: "", email: "", location: "", password: "" });
+  const [role, setRole]         = useState("buyer");
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading]  = useState(false);
-  const [error, setError]      = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState("");
+  const [success, setSuccess]   = useState(false);
 
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  // ── Email + Password register ──
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     const { error } = await signUp.email({
-      name:        form.name,
-      email:       form.email,
-      password:    form.password,
-      callbackURL: "/dashboard",
-      // additional fields
+      name:     form.name,
+      email:    form.email,
+      password: form.password,
       role,
       location: form.location,
     });
 
-    if (error) setError(error.message ?? "Registration failed. Try again.");
+    if (error) {
+      setError(error.message ?? "Registration failed. Try again.");
+      setLoading(false);
+      return;
+    }
+
+    await signOut();
+    router.push("/login");
     setLoading(false);
   };
 
-  // ── Google register ──
   const handleGoogle = async () => {
     setError("");
     await signIn.social({ provider: "google", callbackURL: "/dashboard" });
@@ -74,18 +78,10 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-      {/* ── LEFT: Form ── */}
+      {/* LEFT: Form */}
       <div className="flex flex-col justify-between px-6 py-10 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
 
-        <Link href="/" className="flex items-center gap-2 select-none w-fit">
-          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-            <span className="text-white font-bold text-xs">R</span>
-          </div>
-          <span className="font-extrabold text-base tracking-tight text-gray-900">
-            Re<span className="text-emerald-500">Sell</span>{" "}
-            <span className="font-normal text-gray-400">Hub</span>
-          </span>
-        </Link>
+        
 
         <div className="w-full max-w-md mx-auto flex flex-col gap-6 py-8">
 
@@ -98,7 +94,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg">
               {error}
@@ -107,7 +102,6 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-            {/* Full Name */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-700">Full Name</label>
               <input
@@ -117,7 +111,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-700">Email Address</label>
               <input
@@ -127,7 +120,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Location */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-700">Location</label>
               <div className="relative">
@@ -145,34 +137,21 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-700">Password</label>
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
                   name="password" value={form.password} onChange={handleChange}
-                  placeholder="••••••••" required
+                  placeholder="Min. 8 characters" required
                   className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white placeholder:text-gray-400 transition pr-11"
                 />
-                <button type="button" onClick={() => setShowPass(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  {showPass ? (
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                      <line x1="1" y1="1" x2="23" y2="23"/>
-                    </svg>
-                  ) : (
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  )}
+                <button type="button" onClick={() => setShowPass(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-medium">
+                  {showPass ? "Hide" : "Show"}
                 </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit" disabled={loading}
               className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors text-sm shadow-sm mt-1 flex items-center justify-center gap-2"
@@ -210,11 +189,11 @@ export default function RegisterPage() {
         </div>
 
         <p className="text-xs text-gray-400 text-center">
-          © {new Date().getFullYear()} ReSell Hub. All rights reserved.
+          2025 ReSell Hub. All rights reserved.
         </p>
       </div>
 
-      {/* ── RIGHT: Role cards ── */}
+      {/* RIGHT: Role cards */}
       <div className="hidden lg:block relative overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&auto=format&fit=crop"
@@ -232,7 +211,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Role cards — clicking sets role state in form */}
           <div className="flex flex-col gap-4">
             {ROLES.map(({ key, title, badge, desc, icon, bg }) => (
               <button
