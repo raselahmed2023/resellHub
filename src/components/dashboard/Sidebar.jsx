@@ -102,7 +102,7 @@ export default function Sidebar({ role, user }) {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-100">
-        <button onClick={handleSignOut} className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:text-red-600 w-full transition-colors">
+        <button onClick={handleSignOut}  className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:text-red-600 w-full transition-colors">
           <LogOut size={18} /> Logout
         </button>
       </div>
