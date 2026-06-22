@@ -12,9 +12,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-      {/* ─────────────────────────────────────
-          LEFT — Login Form
-      ───────────────────────────────────── */}
+    
       <div className="flex items-center justify-center px-6 py-12 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
         <div className="w-full max-w-md flex flex-col gap-7">
 
@@ -27,9 +25,9 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Google button */}
+          
           <button className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-medium text-sm py-3 rounded-lg transition-colors shadow-sm">
-            {/* Google G logo */}
+          
             <svg width="18" height="18" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
               <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -80,7 +78,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white placeholder:text-gray-400 transition pr-11"
                 />
-                {/* Eye icon toggle — pore dynamic korba */}
+               
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
@@ -114,9 +112,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ─────────────────────────────────────
-          RIGHT — Visual panel
-      ───────────────────────────────────── */}
       <div className="hidden lg:block relative overflow-hidden">
         {/* Background image */}
         <img
