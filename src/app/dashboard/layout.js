@@ -14,14 +14,14 @@ export default async function DashboardLayout({ children }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9' }}>
-      <Sidebar role={session.user.role} user={session.user} />
-      <main style={{
-        flex: 1,
-        padding: '32px',
-        overflowY: 'auto',
-      }}>
-        {children}
-      </main>
-    </div>
+    <Sidebar role={session.user.role} user={session.user} />
+    <main style={{
+      flex: 1,
+      padding: '32px',
+    }}>
+      {children}
+    </main>
+  </div>
+
   );
 }

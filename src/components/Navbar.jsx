@@ -15,9 +15,9 @@ const NAV_LINKS = [
 ];
 
 const DROPDOWN_ITEMS = [
-  { key: "profile",  label: "My Profile", href: "/dashboard/profile" },
-  { key: "orders",   label: "Orders",     href: "/dashboard/buyer/orders" },
-  { key: "settings", label: "Settings",   href: "/dashboard/settings" },
+  { key: "profile", label: "My Profile", href: "/dashboard/profile" },
+  { key: "orders", label: "Orders", href: "/dashboard/buyer/orders" },
+  { key: "settings", label: "Settings", href: "/dashboard/settings" },
 ];
 
 
@@ -32,7 +32,7 @@ export default function AppNavbar() {
   const { data: session, isPending } = useSession();
   const user = session?.user ?? null;
 
- 
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -94,9 +94,13 @@ export default function AppNavbar() {
                   className="flex items-center gap-2 focus:outline-none"
                 >
                   {/* Avatar circle with initial */}
-                  <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-bold ring-2 ring-emerald-400 ring-offset-2">
-                    {user.name?.charAt(0).toUpperCase() ?? "U"}
-                  </div>
+                  {user.image ? (
+                    <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-400 ring-offset-2" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-bold ring-2 ring-emerald-400 ring-offset-2">
+                      {user.name?.charAt(0).toUpperCase() ?? "U"}
+                    </div>
+                  )}
                   <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate hidden md:block">
                     {user.name?.split(" ")[0]}
                   </span>
@@ -115,7 +119,7 @@ export default function AppNavbar() {
 
                     {DROPDOWN_ITEMS.map(({ key, label, href }) => (
                       <Link
-                        key={key} 
+                        key={key}
                         href={href}
                         onClick={() => setIsDropdownOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"

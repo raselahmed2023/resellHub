@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, Heart, CreditCard, User, PlusCircle, List, Truck, BarChart3, Users, LogOut } from 'lucide-react';
 import { Chip } from "@heroui/react";
-import { CircleCheckFill} from "@gravity-ui/icons";
+import { CircleCheckFill } from "@gravity-ui/icons";
 import { signOut } from '@/lib/auth-client';
 
 
@@ -40,11 +40,11 @@ export default function Sidebar({ role, user }) {
   const menuItems = menuConfig[role] || [];
 
   const handleSignOut = async () => {
-      await signOut({
-        fetchOptions: { onSuccess: () => router.push("/") },
-      });
-     
-    };
+    await signOut({
+      fetchOptions: { onSuccess: () => router.push("/") },
+    });
+
+  };
 
   return (
     <aside className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col font-sans">
@@ -54,25 +54,32 @@ export default function Sidebar({ role, user }) {
           Re<span className="text-emerald-500">Sell</span> Hub</span>
       </Link>
 
-       <Chip color="success" className="flex flex-wrap text-center items-center justify-center font-black uppercase gap-3">
+      <Chip color="success" className="flex flex-wrap text-center items-center justify-center font-black uppercase gap-3">
         <CircleCheckFill width={12} />
         <Chip.Label>{role} Account</Chip.Label>
       </Chip>
 
       {/* User Info */}
+      {/* User Info */}
       <div className="p-5 px-6 py-4 flex items-center gap-3 border-b border-gray-100">
-        <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-black font-bold text-sm shadow-sm">
-          {user?.name?.charAt(0).toUpperCase() || 'U'}
-        </div>
+        {user?.image ? (
+          <img
+            src={user.image}
+            alt={user.name}
+            className="w-9 h-9 rounded-full object-cover shadow-sm"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+            {user?.name?.charAt(0).toUpperCase() || 'U'}
+          </div>
+        )}
         <div>
           <p className="text-sm font-bold text-gray-900 leading-tight">{user?.name || 'User'}</p>
           <p className="text-[11px] text-gray-500">{user?.email}</p>
         </div>
-
       </div>
-
       {/* Premium Badge */}
-      
+
       {/* Nav Links */}
       <nav className="flex-1 p-4 space-y-1">
         {menuItems.map((item) => {
@@ -101,7 +108,7 @@ export default function Sidebar({ role, user }) {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-100">
-        <button onClick={handleSignOut}  className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:text-red-600 w-full transition-colors">
+        <button onClick={handleSignOut} className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:text-red-600 w-full transition-colors">
           <LogOut size={18} /> Logout
         </button>
       </div>
