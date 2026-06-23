@@ -1,11 +1,9 @@
-// lib/axiosSecure.js
+
 "use client";
 import axios from "axios";
 import { authClient } from "@/lib/auth-client";
 
-const axiosSecure = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // .env.local: NEXT_PUBLIC_API_URL=http://localhost:5000
-});
+const axiosSecure = axios.create({baseURL: process.env.NEXT_PUBLIC_API_URL,});
 
 axiosSecure.interceptors.request.use(async (config) => {
   const session = await authClient.getSession();

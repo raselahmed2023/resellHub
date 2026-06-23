@@ -37,8 +37,7 @@ export default function AddProduct() {
     title: "", category: "", condition: "Used",
     price: "", stock: "", description: "",
     status: "available",
-    images: [], // { file, preview }
-  });
+    images: [], });
 
   const set = (key, val) => setForm((p) => ({ ...p, [key]: val }));
 
@@ -105,7 +104,7 @@ export default function AddProduct() {
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-10">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md flex-shrink-0">
             <Plus size={20} color="white" />
           </div>
@@ -132,10 +131,10 @@ export default function AddProduct() {
               {/* Basic Information */}
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                 <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-green-50">
-                  <div className="w-5 h-5 rounded-md bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-5 h-5  rounded-md bg-emerald-500 flex items-center justify-center flex-shrink-0 gap-2">
                     <Info size={11} color="white" />
                   </div>
-                  <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Basic information</span>
+                  <span className=" text-xs font-bold text-emerald-800 uppercase tracking-wider">Basic information</span>
                 </div>
                 <div className="p-5 flex flex-col gap-4">
 
@@ -328,13 +327,15 @@ export default function AddProduct() {
             {/* ── RIGHT SIDEBAR — full width on mobile, fixed width on lg ── */}
             <div className="w-full lg:w-60 flex flex-col gap-4 lg:sticky lg:top-4">
 
+           
               {/* Eco Impact */}
               <div className="rounded-2xl overflow-hidden shadow-lg">
-                <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 px-4 py-3 flex items-center gap-2">
+                <div style={{ background: "linear-gradient(to right, #059669, #065f46)" }} className="px-4 py-3 flex items-center gap-2">
                   <Leaf size={14} className="text-emerald-200" />
                   <span className="text-xs font-bold text-emerald-200 uppercase tracking-widest">Eco impact</span>
                 </div>
-                <div className="bg-emerald-900 p-4">
+
+                <div style={{ backgroundColor: "#064e3b" }} className="p-4">
                   <p className="text-xs text-emerald-200 leading-relaxed mb-3">
                     By listing this pre-owned item, you're preventing waste and saving resources.
                   </p>
@@ -345,7 +346,7 @@ export default function AddProduct() {
                       { val: "1.5x", lbl: "Eco rank" },
                       { val: "♻", lbl: "Circular item" },
                     ].map(({ val, lbl }) => (
-                      <div key={lbl} className="bg-white/10 rounded-xl p-2.5">
+                      <div key={lbl} style={{ backgroundColor: "rgba(255,255,255,0.1)" }} className="rounded-xl p-2.5 flex flex-col justify-center min-h-[56px]">
                         <p className="text-base font-bold text-white">{val}</p>
                         <p className="text-xs text-emerald-300 mt-0.5">{lbl}</p>
                       </div>
@@ -379,7 +380,7 @@ export default function AddProduct() {
               {/* Submit */}
               <button
                 type="submit" disabled={loading}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
               >
                 {loading
                   ? <><Loader2 size={16} className="animate-spin" /> Publishing...</>

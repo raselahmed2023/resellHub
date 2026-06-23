@@ -51,8 +51,7 @@ export default function Sidebar({ role, user }) {
 
       <Link href="/" className="flex items-center text-center justify-center gap-2 mt-4">
         <span className="font-extrabold text-lg text-gray-900">
-          Re<span className="text-emerald-500">Sell</span> Hub
-        </span>
+          Re<span className="text-emerald-500">Sell</span> Hub</span>
       </Link>
 
        <Chip color="success" className="flex flex-wrap text-center items-center justify-center font-black uppercase gap-3">
