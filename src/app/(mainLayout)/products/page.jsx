@@ -16,9 +16,9 @@ const CATEGORIES = [
 const CONDITIONS = ["Refurbished", "Like New", "Used"];
 
 const CONDITION_COLOR = {
-    "Used": "bg-amber-100 text-amber-700",
-    "Like New": "bg-emerald-100 text-emerald-700",
-    "Refurbished": "bg-blue-100 text-blue-700",
+    "Used": "bg-white text-amber-700",
+    "Like New": "bg-white text-amber-700",
+    "Refurbished": "bg-white text-amber-700",
 };
 
 export default function AllProducts() {
@@ -148,63 +148,34 @@ export default function AllProducts() {
                     <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-20">
                         <div className="flex items-center justify-between mb-4">
                             <p className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Filters</p>
-                            <button
-                                onClick={resetFilters}
-                                className="text-xs text-emerald-600 font-semibold hover:underline"
-                            >Reset</button>
+                            <button onClick={resetFilters} className="text-xs text-emerald-600 font-semibold hover:underline">Reset</button>
                         </div>
 
-                        {/* Price Range */}
                         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Price Range</p>
                         <form onSubmit={handlePriceFilter} className="flex gap-2 mb-4">
-                            <input
-                                type="number" placeholder="Min" value={minPrice}
-                                onChange={(e) => setMinPrice(e.target.value)}
-                                className="w-full h-8 bg-slate-50 border border-gray-200 rounded-lg px-2 text-xs text-gray-700 outline-none focus:ring-1 focus:ring-emerald-400"
-                            />
-                            <input
-                                type="number" placeholder="Max" value={maxPrice}
-                                onChange={(e) => setMaxPrice(e.target.value)}
-                                className="w-full h-8 bg-slate-50 border border-gray-200 rounded-lg px-2 text-xs text-gray-700 outline-none focus:ring-1 focus:ring-emerald-400"
-                            />
+                            <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
+                                className="w-full h-8 bg-slate-50 border border-gray-200 rounded-lg px-2 text-xs text-gray-700 outline-none focus:ring-1 focus:ring-emerald-400" />
+                            <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
+                                className="w-full h-8 bg-slate-50 border border-gray-200 rounded-lg px-2 text-xs text-gray-700 outline-none focus:ring-1 focus:ring-emerald-400" />
                         </form>
 
-                        {/* Condition */}
                         <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Condition</p>
                         <div className="flex flex-col gap-1.5 mb-4">
                             {CONDITIONS.map((cond) => (
                                 <label key={cond} className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={conditions.includes(cond)}
-                                        onChange={() => toggleCondition(cond)}
-                                        className="accent-emerald-500"
-                                    />
+                                    <input type="checkbox" checked={conditions.includes(cond)} onChange={() => toggleCondition(cond)} className="accent-emerald-500" />
                                     <span className="text-xs text-gray-600">{cond}</span>
                                 </label>
                             ))}
                         </div>
 
-                        {/* Eco Verified */}
                         <button
                             onClick={() => { setEcoOnly(!ecoOnly); setPage(1); }}
-                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${ecoOnly
-                                ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                                : "bg-slate-50 border-gray-200 text-gray-500 hover:border-emerald-300"
-                                }`}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${ecoOnly ? "bg-emerald-50 border-emerald-300 text-emerald-700" : "bg-slate-50 border-gray-200 text-gray-500 hover:border-emerald-300"}`}
                         >
                             <Leaf size={13} className="text-emerald-500" />
                             Eco-Verified Only
                         </button>
-
-                        {/* Seller Program */}
-                        <div className="mt-4 bg-emerald-50 rounded-xl p-3">
-                            <p className="text-[11px] font-bold text-emerald-700 mb-1">Seller Program</p>
-                            <div className="flex items-center gap-1.5 text-[11px] text-emerald-600 font-semibold">
-                                <CheckCircle2 size={12} />
-                                Go Eco-Verified
-                            </div>
-                        </div>
                     </div>
                 </aside>
 
@@ -228,43 +199,55 @@ export default function AllProducts() {
                             <p className="text-xs text-gray-400 mt-1">Try a different search or filter.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div className="grid p-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
                             {products.map((product) => (
                                 <Link
                                     key={product._id}
                                     href={`/products/${product._id}`}
-                                    className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
+                                    className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                                 >
-                                    <div className="aspect-[4/3] overflow-hidden bg-slate-100 relative">
+                                    {/* Image box — HeroUI card figure style */}
+                                    <div className="m-3 p-4 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 relative" style={{ paddingBottom: "calc(75% - 24px)" }}>
                                         {product.images?.[0] ? (
                                             <img
                                                 src={product.images[0]}
                                                 alt={product.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className=" absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
+                                            <div className="absolute inset-0 flex items-center justify-center">
                                                 <Package size={28} className="text-gray-300" />
                                             </div>
                                         )}
+
+                                        {/* Badge  image */}
                                         {product.condition && (
-                                            <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${CONDITION_COLOR[product.condition] || "bg-gray-100 text-gray-600"}`}>
+                                            <span className={`absolute top-2 left-2 text-[2px] px-2 py-1 rounded-full ${CONDITION_COLOR[product.condition] || "bg-gray-100 text-gray-600"}`}>
                                                 {product.condition}
                                             </span>
                                         )}
                                     </div>
-                                    <div className="p-3">
-                                        <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">{product.category}</p>
-                                        <p className="text-sm font-bold text-gray-900 mt-0.5 truncate">{product.title}</p>
-                                        <div className="flex items-center justify-between mt-2">
-                                            <p className="text-sm font-bold text-orange-500">৳{Number(product.price).toLocaleString()}</p>
+
+                                    {/* Content */}
+                                    <div className="px-3 pb-3 flex flex-col flex-1">
+                                        <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
+                                            {product.category}
+                                        </p>
+                                        <p className="text-sm font-bold text-gray-900 mt-0.5 truncate">
+                                            {product.title}
+                                        </p>
+                                        <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                                            by {product.sellerInfo?.name || "Unknown"}
+                                        </p>
+
+                                        <div className="mt-auto pt-3">
+                                            <p className="text-sm font-bold text-orange-500 mb-2">
+                                                ৳{Number(product.price).toLocaleString()}
+                                            </p>
+                                            <span className="block text-center text-xs font-semibold text-emerald-600 border border-emerald-200 rounded-xl py-1.5 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition">
+                                                View Details
+                                            </span>
                                         </div>
-                                        <p className="text-[10px] text-gray-400 mt-1 truncate">by {product.sellerInfo?.name || "Unknown"}</p>
-                                    </div>
-                                    <div className="px-3 pb-3">
-                                        <span className="block text-center text-xs font-semibold text-emerald-600 border border-emerald-200 rounded-lg py-1.5 group-hover:bg-emerald-50 transition">
-                                            View Details
-                                        </span>
                                     </div>
                                 </Link>
                             ))}
@@ -273,12 +256,9 @@ export default function AllProducts() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex items-center justify-center gap-2 mt-8">
-                            <button
-                                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                                disabled={page === 1}
-                                className="w-8 h-8 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition"
-                            >
+                        <div className="flex items-center justify-center gap-2" style={{ margin: "40px 0" }}>
+                            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
+                                className="w-8 h-8 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition">
                                 <ChevronLeft size={14} className="text-gray-600" />
                             </button>
 
@@ -286,24 +266,15 @@ export default function AllProducts() {
                                 p === "..." ? (
                                     <span key={i} className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">...</span>
                                 ) : (
-                                    <button
-                                        key={p}
-                                        onClick={() => setPage(p)}
-                                        className={`w-8 h-8 rounded-xl text-sm font-semibold transition-all ${page === p
-                                            ? "bg-emerald-500 text-white"
-                                            : "border border-gray-200 text-gray-600 hover:bg-gray-50"
-                                            }`}
-                                    >
+                                    <button key={p} onClick={() => setPage(p)}
+                                        className={`w-8 h-8 rounded-xl text-sm font-semibold transition-all ${page === p ? "bg-emerald-500 text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                                         {p}
                                     </button>
                                 )
                             )}
 
-                            <button
-                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages}
-                                className="w-8 h-8 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition"
-                            >
+                            <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+                                className="w-8 h-8 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 transition">
                                 <ChevronRight size={14} className="text-gray-600" />
                             </button>
                         </div>
