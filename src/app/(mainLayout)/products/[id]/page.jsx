@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 import {
   Loader2, ShoppingCart, Heart, Share2,
   Package, ChevronLeft, Shield, CheckCircle2,
   Tag, Layers, Box, Calendar, Phone, Mail
 } from "lucide-react";
 import axiosSecure from "@/lib/axiosSecure";
+import Link from "next/link";
 
 const CONDITION_COLOR = {
   "Used": "bg-amber-50 text-amber-700 border-amber-200",
@@ -28,6 +30,7 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [wishlist, setWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -40,7 +43,20 @@ export default function ProductDetails() {
         setLoading(false);
       }
     };
-    if (id) fetchProduct();
+
+    const checkWishlist = async () => {
+      try {
+        const res = await axiosSecure.get("/api/wishlist");
+        const exists = res.data.some((item) => item.productId === id);
+        setWishlist(exists);
+      } catch {
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+      checkWishlist();
+    }
   }, [id]);
 
   if (loading) return (
@@ -57,6 +73,23 @@ export default function ProductDetails() {
       </div>
     </div>
   );
+
+  const handleWishlist = async () => {
+    setWishlistLoading(true);
+    try {
+      if (wishlist) {
+        await axiosSecure.delete(`/api/wishlist/${id}`);
+        setWishlist(false);
+      } else {
+        await axiosSecure.post("/api/wishlist", { productId: id });
+        setWishlist(true);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   const initials = product.sellerInfo?.name
     ?.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2) || "S";
@@ -75,14 +108,17 @@ export default function ProductDetails() {
           </button>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setWishlist(!wishlist)}
-              className={`w-9 h-9 rounded-xl border flex items-center justify-center transition ${
-                wishlist
-                  ? "bg-red-50 border-red-200 text-red-500"
-                  : "border-gray-200 text-gray-400 hover:text-red-400 hover:border-red-200"
-              }`}
+              onClick={handleWishlist}
+              disabled={wishlistLoading}
+              className={`w-9 h-9 rounded-xl border flex items-center justify-center transition ${wishlist
+                ? "bg-red-50 border-red-200 text-red-500"
+                : "border-gray-200 text-gray-400 hover:text-red-400 hover:border-red-200"
+                }`}
             >
-              <Heart size={15} fill={wishlist ? "currentColor" : "none"} />
+              {wishlistLoading
+                ? <Loader2 size={15} className="animate-spin" />
+                : <Heart size={15} fill={wishlist ? "currentColor" : "none"} />
+              }
             </button>
             <button className="w-9 h-9 rounded-xl border border-gray-200 text-gray-400 flex items-center justify-center hover:text-gray-600 transition">
               <Share2 size={15} />
@@ -124,11 +160,10 @@ export default function ProductDetails() {
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                      selectedImage === i
-                        ? "border-emerald-500 scale-105"
-                        : "border-gray-100 hover:border-gray-300 opacity-70 hover:opacity-100"
-                    }`}
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === i
+                      ? "border-emerald-500 scale-105"
+                      : "border-gray-100 hover:border-gray-300 opacity-70 hover:opacity-100"
+                      }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
@@ -158,13 +193,12 @@ export default function ProductDetails() {
               </div>
 
               {/* Buy button */}
-              <button
-                disabled={product.stock === 0}
-                className="mt-8 p-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+              <Link
+                href={`/checkout?productId=${product._id}`}
+                className="mt-5 w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all"
               >
-                <ShoppingCart size={17} />
-                {product.stock > 0 ? "Buy Now" : "Out of Stock"}
-              </button>
+                <ShoppingCart size={17} /> Buy Now
+              </Link>
             </div>
 
             {/* Description */}

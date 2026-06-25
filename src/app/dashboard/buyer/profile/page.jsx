@@ -5,7 +5,7 @@ import { Loader2, User, Phone, MapPin, Lock, Save, Eye, EyeOff } from "lucide-re
 import axiosSecure from "@/lib/axiosSecure";
 import { authClient } from "@/lib/auth-client";
 
-export default function SellerProfile() {
+export default function BuyerProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");

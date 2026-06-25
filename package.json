@@ -13,6 +13,8 @@
     "@gravity-ui/icons": "^2.18.0",
     "@heroui/navbar": "^2.2.30",
     "@heroui/react": "^3.2.1",
+    "@stripe/react-stripe-js": "^6.6.0",
+    "@stripe/stripe-js": "^9.8.0",
     "axios": "^1.18.0",
     "better-auth": "^1.6.20",
     "framer-motion": "^12.40.0",
