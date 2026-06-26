@@ -8,16 +8,23 @@ import {
   Loader2, ArrowRight
 } from "lucide-react";
 import axiosSecure from "@/lib/axiosSecure";
+import { motion } from "framer-motion";
 
 const CATEGORY_META = {
-  "Electronics":   { icon: Monitor,    color: "bg-blue-50 text-blue-600",     border: "border-blue-100",   hover: "hover:bg-blue-100",   badge: "bg-blue-500" },
-  "Mobile Phones": { icon: Smartphone, color: "bg-emerald-50 text-emerald-600", border: "border-emerald-100", hover: "hover:bg-emerald-100", badge: "bg-emerald-500" },
-  "Furniture":     { icon: Sofa,       color: "bg-amber-50 text-amber-600",   border: "border-amber-100",  hover: "hover:bg-amber-100",  badge: "bg-amber-500" },
-  "Vehicles":      { icon: Car,        color: "bg-red-50 text-red-600",       border: "border-red-100",    hover: "hover:bg-red-100",    badge: "bg-red-500" },
-  "Fashion":       { icon: Shirt,      color: "bg-pink-50 text-pink-600",     border: "border-pink-100",   hover: "hover:bg-pink-100",   badge: "bg-pink-500" },
-  "Books":         { icon: BookOpen,   color: "bg-purple-50 text-purple-600", border: "border-purple-100", hover: "hover:bg-purple-100", badge: "bg-purple-500" },
-  "Sports":        { icon: Dumbbell,   color: "bg-orange-50 text-orange-600", border: "border-orange-100", hover: "hover:bg-orange-100", badge: "bg-orange-500" },
-  "Other":         { icon: Package,    color: "bg-gray-50 text-gray-600",     border: "border-gray-100",   hover: "hover:bg-gray-100",   badge: "bg-gray-500" },
+  "Electronics":   { icon: Monitor,    color: "bg-blue-50 text-blue-600",     activeBg: "bg-blue-500",    border: "border-blue-200" },
+  "Mobile Phones": { icon: Smartphone, color: "bg-emerald-50 text-emerald-600", activeBg: "bg-emerald-500", border: "border-emerald-200" },
+  "Furniture":     { icon: Sofa,       color: "bg-amber-50 text-amber-600",   activeBg: "bg-amber-500",   border: "border-amber-200" },
+  "Vehicles":      { icon: Car,        color: "bg-red-50 text-red-600",       activeBg: "bg-red-500",     border: "border-red-200" },
+  "Fashion":       { icon: Shirt,      color: "bg-pink-50 text-pink-600",     activeBg: "bg-pink-500",    border: "border-pink-200" },
+  "Books":         { icon: BookOpen,   color: "bg-purple-50 text-purple-600", activeBg: "bg-purple-500",  border: "border-purple-200" },
+  "Sports":        { icon: Dumbbell,   color: "bg-orange-50 text-orange-600", activeBg: "bg-orange-500",  border: "border-orange-200" },
+  "Other":         { icon: Package,    color: "bg-gray-50 text-gray-600",     activeBg: "bg-gray-500",    border: "border-gray-200" },
+};
+
+const CONDITION_COLOR = {
+  "Used": "bg-white text-amber-700",
+  "Like New": "bg-white text-amber-700",
+  "Refurbished": "bg-white text-amber-700",
 };
 
 export default function CategoriesPage() {
@@ -67,35 +74,35 @@ export default function CategoriesPage() {
             <Loader2 size={32} className="animate-spin text-emerald-500" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
-            {categories.map(({ _id: name, count }) => {
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-10">
+            {categories.map(({ _id: name, count }, index) => {
               const meta = CATEGORY_META[name] || CATEGORY_META["Other"];
               const Icon = meta.icon;
               const isSelected = selectedCategory === name;
 
               return (
-                <button
+                <motion.button
                   key={name}
                   onClick={() => handleCategoryClick(name)}
-                  className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-md group text-left ${
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ y: -4, scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`flex flex-col items-center gap-2.5 p-4 rounded-2xl border-2 transition-colors duration-200 ${
                     isSelected
-                      ? `${meta.border} border-2 shadow-md -translate-y-1 ${meta.color.split(" ")[0]}`
-                      : `border-gray-100 bg-white hover:${meta.color.split(" ")[0]}`
+                      ? `${meta.border} ${meta.color.split(" ")[0]} shadow-md`
+                      : "border-gray-100 bg-white hover:border-gray-200"
                   }`}
                 >
-                  <div className={`w-14 h-14 rounded-2xl ${meta.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <Icon size={26} />
+                  <div className={`w-12 h-12 rounded-xl ${isSelected ? meta.activeBg + " text-white" : meta.color} flex items-center justify-center transition-colors duration-200`}>
+                    <Icon size={22} />
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-gray-800">{name}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{count} items</p>
+                    <p className={`text-xs font-bold ${isSelected ? "text-gray-900" : "text-gray-700"}`}>{name}</p>
+                    <p className="text-[10px] text-gray-400 mt-0.5">{count} items</p>
                   </div>
-                  {isSelected && (
-                    <span className={`text-[10px] font-bold text-white px-2.5 py-0.5 rounded-full ${meta.badge}`}>
-                      Selected
-                    </span>
-                  )}
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -103,9 +110,13 @@ export default function CategoriesPage() {
 
         {/* Selected Category Products */}
         {selectedCategory && (
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <div>
+              <div className="p-4">
                 <h2 className="text-lg font-bold text-gray-900">{selectedCategory}</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Latest products in this category</p>
               </div>
@@ -128,36 +139,67 @@ export default function CategoriesPage() {
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                {products.map((product) => (
-                  <Link
+                {products.map((product, index) => (
+                  <motion.div
                     key={product._id}
-                    href={`/products/${product._id}`}
-                    className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
                   >
-                    <div className="aspect-square overflow-hidden bg-slate-100 relative">
-                      {product.images?.[0] ? (
-                        <img
-                          src={product.images[0]}
-                          alt={product.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package size={24} className="text-gray-300" />
+                    <Link
+                      href={`/products/${product._id}`}
+                      className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                    >
+                      {/* Image — same style as FeaturedProducts */}
+                      <div
+                        className="m-3 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 relative"
+                        style={{ paddingBottom: "calc(75% - 24px)" }}
+                      >
+                        {product.images?.[0] ? (
+                          <img
+                            src={product.images[0]}
+                            alt={product.title}
+                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Package size={24} className="text-gray-300" />
+                          </div>
+                        )}
+                        {product.condition && (
+                          <span className={`absolute top-2 left-2 p-4 text-[10px] px-2 py-0.5 rounded font-semibold ${CONDITION_COLOR[product.condition] || "bg-gray-100 text-gray-600"}`}>
+                            {product.condition}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="px-3 pb-3 flex flex-col flex-1">
+                        <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
+                          {product.category}
+                        </p>
+                        <p className="text-sm font-bold text-gray-900 mt-0.5 truncate">
+                          {product.title}
+                        </p>
+                        <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                          by {product.sellerInfo?.name || "Unknown"}
+                        </p>
+                        <div className="mt-auto pt-3">
+                          <p className="text-sm font-bold text-orange-500 mb-2">
+                            ৳{Number(product.price).toLocaleString()}
+                          </p>
+                          <span className="block text-center text-xs font-semibold text-emerald-600 border border-emerald-200 rounded-xl py-1.5 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition">
+                            View Details
+                          </span>
                         </div>
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <p className="text-xs font-bold text-gray-800 truncate">{product.title}</p>
-                      <p className="text-sm font-bold text-orange-500 mt-1">
-                        ৳{Number(product.price).toLocaleString()}
-                      </p>
-                    </div>
-                  </Link>
+                      </div>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         )}
 
       </div>
