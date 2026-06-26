@@ -59,7 +59,7 @@ export default function AdminOrders() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 p-4">
               {filtered.map((order) => (
                 <div key={order._id} className="flex items-center gap-4 px-5 py-4 flex-wrap sm:flex-nowrap">
                   <div className="flex-1 min-w-0">
