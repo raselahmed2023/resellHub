@@ -15,9 +15,9 @@ const NAV_LINKS = [
 ];
 
 const DROPDOWN_ITEMS = [
-  { key: "profile", label: "My Profile", href: "/dashboard/profile" },
-  { key: "orders", label: "Orders", href: "/dashboard/buyer/orders" },
-  { key: "settings", label: "Settings", href: "/dashboard/settings" },
+  { key: "profile", label: "My Profile", href: "/dashboard" },
+  { key: "orders", label: "Orders", href: "/dashboard" },
+  { key: "settings", label: "Settings", href: "/dashboard" },
 ];
 
 

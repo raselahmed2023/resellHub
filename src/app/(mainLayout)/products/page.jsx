@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import axiosSecure from "@/lib/axiosSecure";
+import { motion } from "framer-motion";
 
 const CATEGORIES = [
     "All", "Electronics", "Furniture", "Vehicles",
@@ -199,7 +200,10 @@ export default function AllProducts() {
                             <p className="text-xs text-gray-400 mt-1">Try a different search or filter.</p>
                         </div>
                     ) : (
-                        <div className="grid p-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
+                        <motion.div initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4}} className="grid p-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
                             {products.map((product) => (
                                 <Link
                                     key={product._id}
@@ -251,7 +255,7 @@ export default function AllProducts() {
                                     </div>
                                 </Link>
                             ))}
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Pagination */}

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Package, Users, ShoppingBag, CheckCircle, TrendingUp } from "lucide-react";
 import axiosSecure from "@/lib/axiosSecure";
+import { motion } from "framer-motion";
+
 
 const STATS = [
   {
@@ -85,42 +87,50 @@ export default function MarketplaceStats() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
-        <div className="text-center mb-10">
+        <motion.div className="text-center mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}>
           <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2">By the numbers</p>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Marketplace Statistics</h2>
           <p className="text-sm text-gray-500 mt-2">Real-time data from our growing community</p>
-        </div>
+        </motion.div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-          {STATS.map(({ key, label, icon: Icon, color, border, trend }) => (
-            <div
-              key={key}
-              className={`bg-white rounded-2xl border ${border} p-5 flex flex-col gap-3 hover:shadow-md transition-shadow`}
-            >
-              <div className={`w-11 h-11 rounded-xl  flex items-center justify-center flex-shrink-0`}>
-                <Icon size={20} />
-              </div>
+          {STATS.map(({ key, label, icon: Icon, color, border, trend },index) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`bg-white rounded-2xl border ${border} p-5 flex flex-col gap-3 hover:shadow-md transition-shadow`}
+              >
+                <div className={`w-11 h-11 rounded-xl  flex items-center justify-center flex-shrink-0`}>
+                  <Icon size={20} />
+                </div>
 
-              <div>
-                <p className="text-2xl text-center sm:text-3xl font-bold text-gray-900">
-                  {loading ? (
-                    <span className="inline-block w-16 h-8 bg-gray-100 rounded animate-pulse" />
-                  ) : (
-                    <CountUp target={stats?.[key] || 0} />
-                  )}
-                  <span className="text-lg">+</span>
-                </p>
-                <p className="text-xs text-center font-semibold text-gray-500 mt-0.5">{label}</p>
-              </div>
+                <div>
+                  <p className="text-2xl text-center sm:text-3xl font-bold text-gray-900">
+                    {loading ? (
+                      <span className="inline-block w-16 h-8 bg-gray-100 rounded animate-pulse" />
+                    ) : (
+                      <CountUp target={stats?.[key] || 0} />
+                    )}
+                    <span className="text-lg">+</span>
+                  </p>
+                  <p className="text-xs text-center font-semibold text-gray-500 mt-0.5">{label}</p>
+                </div>
 
-              <div className="flex text-center justify-center items-center gap-1 text-emerald-600">
-                <TrendingUp size={12} />
-                <span className="text-[10px] font-semibold">{trend}</span>
-              </div>
-            </div>
+                <div className="flex text-center justify-center items-center gap-1 text-emerald-600">
+                  <TrendingUp size={12} />
+                  <span className="text-[10px] font-semibold">{trend}</span>
+                </div>
+              </motion.div>
           ))}
-        </div>
+            </div>
 
       </div>
     </section>
