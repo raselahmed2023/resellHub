@@ -71,51 +71,59 @@ function CheckoutForm({ product, clientSecret }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
+
       {/* Order Summary */}
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="bg-white p-4 rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-green-50">
           <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Order summary</span>
         </div>
-        <div className="p-4 flex gap-4">
-          <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-            {product.images?.[0] ? (
-              <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Package size={24} className="text-gray-300" />
-              </div>
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-gray-900 truncate">{product.title}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{product.category}</p>
-            <p className="text-xs text-gray-500 mt-0.5">Seller: {product.sellerInfo?.name}</p>
-            <div className="flex items-center justify-between mt-2">
-              <p className="text-lg font-bold text-orange-500">৳{Number(product.price).toLocaleString()}</p>
-              <span className="text-xs text-emerald-600 font-semibold">{product.condition}</span>
+        <div className="p-4">
+          {/* Product row */}
+          <div className="flex gap-3 items-center">
+            <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-gray-100">
+              {product.images?.[0] ? (
+                <img
+                  src={product.images[0]}
+                  alt={product.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Package size={24} className="text-gray-300" />
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-900 truncate">{product.title}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{product.category}</p>
+              <p className="text-xs text-gray-400 mt-0.5">Seller: {product.sellerInfo?.name}</p>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <p className="text-base font-bold text-orange-500">৳{Number(product.price).toLocaleString()}</p>
+              <span className="text-[10px] font-semibold text-emerald-600">{product.condition}</span>
             </div>
           </div>
-        </div>
 
-        {/* Price breakdown */}
-        <div className="px-5 py-3 border-t border-gray-100 bg-slate-50">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
-            <span>Product price</span>
-            <span>৳{Number(product.price).toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mb-2">
-            <span>Delivery charge</span>
-            <span>৳100</span>
-          </div>
-          <div className="flex justify-between text-sm font-bold text-gray-900">
-            <span>Total</span>
-            <span>৳{(Number(product.price) + 100).toLocaleString()}</span>
+          {/* Price breakdown */}
+          <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col gap-1.5">
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Product price</span>
+              <span>৳{Number(product.price).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Delivery charge</span>
+              <span>৳100</span>
+            </div>
+            <div className="flex justify-between text-sm font-bold text-gray-900 pt-1 border-t border-gray-100 mt-1">
+              <span>Total</span>
+              <span>৳{(Number(product.price) + 100).toLocaleString()}</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Delivery Info */}
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="bg-white p-4 rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-sky-50">
           <span className="text-xs font-bold text-blue-800 uppercase tracking-wider">Delivery information</span>
         </div>
@@ -154,7 +162,7 @@ function CheckoutForm({ product, clientSecret }) {
       </div>
 
       {/* Card Payment */}
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="bg-white p-4 rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-fuchsia-50">
           <span className="text-xs font-bold text-purple-800 uppercase tracking-wider">Card payment</span>
         </div>
@@ -182,7 +190,7 @@ function CheckoutForm({ product, clientSecret }) {
 
       <button
         type="submit" disabled={loading || !stripe}
-        className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
+        className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 p-4 disabled:cursor-not-allowed text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
       >
         {loading
           ? <><Loader2 size={16} className="animate-spin" /> Processing...</>
@@ -243,7 +251,7 @@ export default function CheckoutPage() {
 
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-md">
-            <Package size={20} color="white" />
+            <Package size={20} color="black" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">Checkout</h1>

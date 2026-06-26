@@ -126,7 +126,7 @@ export default function BuyerProfile() {
 
           {/* Photo */}
           <div className="p-5 flex items-center gap-5">
-            <div className="w-16 h-16 flex-shrink-0">  {/* ✅ relative সরাও */}
+            <div className="w-16 h-16 flex-shrink-0">  
               {form.photoPreview ? (
                 <img
                   src={form.photoPreview}
@@ -230,7 +230,7 @@ export default function BuyerProfile() {
           {/* Submit */}
           <button
             type="submit" disabled={loading}
-            className="text-white w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
+            className="text-black p-4 w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
           >
             {loading
               ? <><Loader2 size={16} className="animate-spin" /> Saving...</>

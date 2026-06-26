@@ -50,7 +50,7 @@ export default function AdminAnalytics() {
 
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md">
-            <BarChart3 size={20} color="white" />
+            <BarChart3 size={20} color="black" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">Platform analytics</h1>

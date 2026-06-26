@@ -380,7 +380,7 @@ export default function AddProduct() {
               {/* Submit */}
               <button
                 type="submit" disabled={loading}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
+                className="w-full h-12 p-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 hover:scale-[1.02] transition-all"
               >
                 {loading
                   ? <><Loader2 size={16} className="animate-spin" /> Publishing...</>

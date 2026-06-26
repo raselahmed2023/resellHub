@@ -46,7 +46,7 @@ export default function SellerOverview() {
         </div>
 
         {/* Recent Orders */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
             <h2 className="text-sm font-bold text-gray-800">Recent orders</h2>
             <Link href="/dashboard/seller/manage-orders" className="text-xs text-emerald-600 font-semibold hover:underline">View all</Link>

@@ -62,7 +62,7 @@ export default function Wishlist() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-md flex-shrink-0">
-            <Heart size={20} color="white" />
+            <Heart size={20} color="black" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">Wishlist</h1>
@@ -83,7 +83,7 @@ export default function Wishlist() {
             <p className="text-xs text-gray-400 mt-1">Save items you love to buy later.</p>
             <Link
               href="/products"
-              className="mt-4 px-5 py-2 rounded-xl bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition"
+              className="mt-4 p-4 px-5 py-2 rounded-xl bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition"
             >
               Browse products
             </Link>
@@ -145,7 +145,7 @@ export default function Wishlist() {
                     </Link>
                     <Link
                       href={`/checkout?productId=${productId}`}
-                      className="flex-1 h-9 rounded-xl bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-emerald-600 transition"
+                      className="flex-1 h-9 rounded-xl bg-emerald-500 text-black text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-emerald-600 transition"
                     >
                       <ShoppingCart size={13} /> Buy Now
                     </Link>

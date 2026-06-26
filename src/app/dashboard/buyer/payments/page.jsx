@@ -20,7 +20,7 @@ export default function PaymentHistory() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-md">
-            <CreditCard size={20} color="white" />
+            <CreditCard size={20} color="black" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">Payment history</h1>
@@ -39,7 +39,7 @@ export default function PaymentHistory() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 p-4">
               {payments.map((p) => (
                 <div key={p._id} className="flex items-center gap-4 px-5 py-4 flex-wrap sm:flex-nowrap">
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
@@ -53,7 +53,7 @@ export default function PaymentHistory() {
                     <p className="text-sm font-bold text-orange-500">৳{Number(p.amount).toLocaleString()}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{new Date(p.createdAt).toLocaleDateString("en-BD")}</p>
                   </div>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 flex-shrink-0">
+                  <span className="text-xs font-semibold px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 flex-shrink-0">
                     {p.paymentStatus}
                   </span>
                 </div>

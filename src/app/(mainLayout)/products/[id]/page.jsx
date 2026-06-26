@@ -195,7 +195,7 @@ export default function ProductDetails() {
               {/* Buy button */}
               <Link
                 href={`/checkout?productId=${product._id}`}
-                className="mt-5 w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                className="mt-5 w-full h-10/12 p-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all"
               >
                 <ShoppingCart size={17} /> Buy Now
               </Link>
