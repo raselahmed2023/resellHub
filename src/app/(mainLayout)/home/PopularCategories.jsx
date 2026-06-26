@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Smartphone, Monitor, Sofa, Car, Shirt, BookOpen, Dumbbell, Package, Loader2 } from "lucide-react";
 import axiosSecure from "@/lib/axiosSecure";
+import { motion } from "framer-motion";
 
 const CATEGORY_META = {
   "Electronics":   { icon: Monitor,     color: "bg-blue-50 text-blue-600",    border: "border-blue-100",   hover: "hover:bg-blue-100" },
@@ -49,24 +50,33 @@ export default function PopularCategories() {
             <Loader2 size={28} className="animate-spin text-emerald-500" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-            {categories.map(({ _id: name, count }) => {
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {categories.map(({ _id: name, count }, index) => {
               const meta = CATEGORY_META[name] || CATEGORY_META["Other"];
               const Icon = meta.icon;
               return (
-                <Link
+                <motion.div
                   key={name}
-                  href={`/products?category=${encodeURIComponent(name)}`}
-                  className={`flex flex-col items-center gap-3 p-4 rounded-2xl border ${meta.border} ${meta.hover} transition-all duration-200 hover:-translate-y-1 hover:shadow-md group`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ y: -4, scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  <div className={`w-12 h-12 rounded-xl ${meta.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <Icon size={22} />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-bold text-gray-800">{name}</p>
-                    <p className="text-[10px] text-gray-400 mt-0.5">{count}+ items</p>
-                  </div>
-                </Link>
+                  <Link
+                    href={`/products?category=${encodeURIComponent(name)}`}
+                    className={`flex flex-col items-center gap-3 p-4 rounded-2xl border ${meta.border} ${meta.hover} transition-all duration-200 hover:shadow-md group`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl ${meta.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <Icon size={22} />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs font-bold text-gray-800">{name}</p>
+                      <p className="text-[10px] text-gray-400 mt-0.5">{count}+ items</p>
+                    </div>
+                  </Link>
+                </motion.div>
               );
             })}
           </div>

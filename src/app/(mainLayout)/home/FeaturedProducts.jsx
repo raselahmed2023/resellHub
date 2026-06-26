@@ -65,60 +65,72 @@ export default function FeaturedProducts() {
             <p className="text-gray-500 font-semibold">No products yet.</p>
           </div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4}} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <Link
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+          >
+            {products.map((product, index) => (
+              <motion.div
                 key={product._id}
-                href={`/products/${product._id}`}
-                className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                {/* Image box — HeroUI card figure style */}
-                <div className="m-3 p-4 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 relative" style={{ paddingBottom: "calc(75% - 24px)" }}>
-                  {product.images?.[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.title}
-                      className=" absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Package size={28} className="text-gray-300" />
-                    </div>
-                  )}
+                <Link
+                  href={`/products/${product._id}`}
+                  className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300"
+                >
+                  {/* Image box — HeroUI card figure style */}
+                  <div className="m-3 p-4 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 relative" style={{ paddingBottom: "calc(75% - 24px)" }}>
+                    {product.images?.[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Package size={28} className="text-gray-300" />
+                      </div>
+                    )}
 
-                  {/* Badge  image */}
-                  {product.condition && (
-                    <span className={`absolute top-2 left-2 text-[2px] px-2 py-1 rounded-full ${CONDITION_COLOR[product.condition] || "bg-gray-100 text-gray-600"}`}>
-                      {product.condition}
-                    </span>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="px-3 pb-3 flex flex-col flex-1">
-                  <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
-                    {product.category}
-                  </p>
-                  <p className="text-sm font-bold text-gray-900 mt-0.5 truncate">
-                    {product.title}
-                  </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5 truncate">
-                    by {product.sellerInfo?.name || "Unknown"}
-                  </p>
-
-                  <div className="mt-auto pt-3">
-                    <p className="text-sm font-bold text-orange-500 mb-2">
-                      ৳{Number(product.price).toLocaleString()}
-                    </p>
-                    <span className="block text-center text-xs font-semibold text-emerald-600 border border-emerald-200 rounded-xl py-1.5 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition">
-                      View Details
-                    </span>
+                    {/* Badge image */}
+                    {product.condition && (
+                      <span className={`absolute top-2 left-2 text-[2px] px-2 py-1 rounded-full ${CONDITION_COLOR[product.condition] || "bg-gray-100 text-gray-600"}`}>
+                        {product.condition}
+                      </span>
+                    )}
                   </div>
-                </div>
-              </Link>
+
+                  {/* Content */}
+                  <div className="px-3 pb-3 flex flex-col flex-1">
+                    <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider">
+                      {product.category}
+                    </p>
+                    <p className="text-sm font-bold text-gray-900 mt-0.5 truncate">
+                      {product.title}
+                    </p>
+                    <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                      by {product.sellerInfo?.name || "Unknown"}
+                    </p>
+
+                    <div className="mt-auto pt-3">
+                      <p className="text-sm font-bold text-orange-500 mb-2">
+                        ৳{Number(product.price).toLocaleString()}
+                      </p>
+                      <span className="block text-center text-xs font-semibold text-emerald-600 border border-emerald-200 rounded-xl py-1.5 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition">
+                        View Details
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </motion.div>
         )}
