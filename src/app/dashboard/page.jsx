@@ -9,7 +9,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (isPending) return;
-    if (!session) { router.push("/login"); return; }
+    if (!session) {
+      router.push("/login");
+      return;
+    }
 
     const role = session.user.role;
     if (role === "buyer") router.push("/dashboard/buyer");
@@ -18,6 +21,6 @@ export default function DashboardPage() {
     else router.push("/login");
   }, [session, isPending]);
 
-  if (isPending) return <div>Loading...</div>;
-  return null;
+  
+  return <div>Loading...</div>;
 }
