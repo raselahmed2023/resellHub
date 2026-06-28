@@ -187,10 +187,6 @@ export default function RegisterPage() {
             <Link href="/login" className="font-semibold text-emerald-600 hover:text-emerald-700">Back to Login</Link>
           </p>
         </div>
-
-        <p className="text-xs text-gray-400 text-center">
-          2025 ReSell Hub. All rights reserved.
-        </p>
       </div>
 
       {/* RIGHT: Role cards */}
