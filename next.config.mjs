@@ -3,7 +3,7 @@ const nextConfig = {
     return [
       {
         source: "/api/server/:path*",
-        destination: "https://resellhub-server-1.onrender.com/api/:path*",
+        destination: "https://resellhub-server-1.onrender.com/:path*",
       },
     ];
   },
