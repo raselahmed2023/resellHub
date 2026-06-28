@@ -1,22 +1,23 @@
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+"use client";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default async function DashboardPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export default function DashboardPage() {
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
 
-  console.log('SESSION:', session);
-  console.log('ROLE:', session?.user?.role);
+  useEffect(() => {
+    if (isPending) return;
+    if (!session) { router.push("/login"); return; }
 
-  if (!session) redirect('/login');
+    const role = session.user.role;
+    if (role === "buyer") router.push("/dashboard/buyer");
+    else if (role === "seller") router.push("/dashboard/seller");
+    else if (role === "admin") router.push("/dashboard/admin");
+    else router.push("/login");
+  }, [session, isPending]);
 
-  const role = session.user.role;
-
-  if (role === 'buyer') redirect('/dashboard/buyer');
-  if (role === 'seller') redirect('/dashboard/seller');
-  if (role === 'admin') redirect('/dashboard/admin');
-
-  redirect('/login');
+  if (isPending) return <div>Loading...</div>;
+  return null;
 }
