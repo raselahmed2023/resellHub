@@ -8,6 +8,7 @@ const axiosSecure = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL, wit
 axiosSecure.interceptors.request.use(async (config) => {
   const session = await authClient.getSession();
   const token = session?.data?.session?.token;
+  console.log('Session token:', token);
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
