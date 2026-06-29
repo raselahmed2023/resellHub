@@ -3,10 +3,12 @@ import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URI);
-const db = client.db("resellHub");
+const clientPromise = client.connect();
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(
+    (await clientPromise).db("resellHub")
+  ),
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   emailAndPassword: { enabled: true },
@@ -19,7 +21,8 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: { type: "string", defaultValue: "buyer" },
-      location: { type: "string", required: false }
+      location: { type: "string", required: false },
+      phone: { type: "string", required: false },
     },
   },
 });
