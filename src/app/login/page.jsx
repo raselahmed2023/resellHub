@@ -36,7 +36,7 @@ export default function LoginPage() {
       router.replace("/dashboard");
       router.refresh();
       setLoading(false);
-    }, 500);
+    }, 900);
   };
 
   const handleGoogleLogin = async () => {

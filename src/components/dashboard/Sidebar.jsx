@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Chip } from "@heroui/react";
 import { CircleCheckFill } from "@gravity-ui/icons";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 
 const menuConfig = {
   buyer: [
@@ -67,13 +67,16 @@ export default function Sidebar({ role, user }) {
   const pathname = usePathname();
   const router = useRouter();
 
+  const { data: clientSession } = useSession();
+  const currentUser = user || clientSession?.user;
+
   const pathRole = pathname.startsWith("/dashboard/admin")
     ? "admin"
     : pathname.startsWith("/dashboard/seller")
     ? "seller"
     : pathname.startsWith("/dashboard/buyer")
     ? "buyer"
-    : role || "buyer";
+    : role || currentUser?.role || "buyer";
 
   const menuItems = menuConfig[pathRole] || menuConfig.buyer;
 
@@ -114,24 +117,24 @@ export default function Sidebar({ role, user }) {
 
       {/* User Info */}
       <div className="px-4 py-4 flex items-center gap-3 border-b border-gray-100">
-        {user?.image ? (
+        {currentUser?.image ? (
           <img
-            src={user.image}
-            alt={user?.name || "User"}
+            src={currentUser.image}
+            alt={currentUser?.name || "User"}
             className="w-10 h-10 rounded-full object-cover shadow-sm border border-emerald-100"
           />
         ) : (
           <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-            {user?.name?.charAt(0).toUpperCase() || "U"}
+            {currentUser?.name?.charAt(0).toUpperCase() || "U"}
           </div>
         )}
 
         <div className="min-w-0">
           <p className="text-sm font-bold text-gray-900 leading-tight truncate">
-            {user?.name || "User"}
+            {currentUser?.name || "User"}
           </p>
           <p className="text-[11px] text-gray-500 truncate">
-            {user?.email}
+            {currentUser?.email || ""}
           </p>
         </div>
       </div>
@@ -140,6 +143,7 @@ export default function Sidebar({ role, user }) {
       <nav className="flex-1 p-3 md:p-4 flex md:block gap-2 md:space-y-1 overflow-x-auto md:overflow-visible">
         {menuItems.map((item) => {
           const Icon = item.icon;
+
           const isActive =
             pathname === item.href ||
             (item.href !== `/dashboard/${pathRole}` &&
