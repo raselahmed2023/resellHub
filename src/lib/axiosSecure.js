@@ -1,8 +1,18 @@
 import axios from "axios";
+import { authClient } from "./auth-client";
 
 const axiosSecure = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
+});
+
+axiosSecure.interceptors.request.use(async (config) => {
+  const session = await authClient.getSession();
+  const token = session?.data?.session?.token;
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
 });
 
 axiosSecure.interceptors.response.use(
@@ -10,8 +20,6 @@ axiosSecure.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.log("Unauthorized - redirecting to login");
-      // Optional: redirect to login page
-      // window.location.href = '/login';
     }
     return Promise.reject(error);
   }
