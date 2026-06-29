@@ -87,7 +87,6 @@ function CheckoutForm({ product, clientSecret }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      {/* Order Summary */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-green-50">
           <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
@@ -152,7 +151,6 @@ function CheckoutForm({ product, clientSecret }) {
         </div>
       </div>
 
-      {/* Delivery Info */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-sky-50">
           <span className="text-xs font-bold text-blue-800 uppercase tracking-wider">
@@ -202,7 +200,6 @@ function CheckoutForm({ product, clientSecret }) {
         </div>
       </div>
 
-      {/* Card Payment */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-fuchsia-50">
           <span className="text-xs font-bold text-purple-800 uppercase tracking-wider">
@@ -280,6 +277,16 @@ function CheckoutContent() {
         const productRes = await axiosSecure.get(`/api/products/${productId}`);
         const productData = productRes.data;
 
+        const stock = Number(productData.stock || 0);
+        const isOutOfStock =
+          stock <= 0 || productData.status !== "available";
+
+        if (isOutOfStock) {
+          setError("This product is out of stock.");
+          setLoading(false);
+          return;
+        }
+
         setProduct(productData);
 
         const totalAmount = Number(productData.price) + 100;
@@ -316,10 +323,19 @@ function CheckoutContent() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <p className="text-red-500 font-semibold">
-          {error || "Product not found."}
-        </p>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center max-w-md">
+          <p className="text-red-500 font-bold">
+            {error || "Product not found."}
+          </p>
+
+          <button
+            onClick={() => window.history.back()}
+            className="mt-4 h-10 px-5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     );
   }
