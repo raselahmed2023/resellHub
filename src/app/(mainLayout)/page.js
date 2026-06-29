@@ -3,6 +3,8 @@ import SustainabilityImpact from "@/components/SustainabilityImpact";
 import FeaturedProducts from "./home/FeaturedProducts";
 import PopularCategories from "./home/PopularCategories";
 import MarketplaceStats from "./home/MarketplaceStats";
+import SuccessStories from "@/components/SuccessStories";
+import TrustedSellersShowcase from "@/components/TrustedSellersShowcase";
 
 
 export const metadata = {
@@ -17,8 +19,10 @@ export default function Home() {
 
       <FeaturedProducts></FeaturedProducts>
       <PopularCategories></PopularCategories>
+      <SuccessStories></SuccessStories>
       <MarketplaceStats></MarketplaceStats>
       <SustainabilityImpact></SustainabilityImpact>
+      <TrustedSellersShowcase></TrustedSellersShowcase>
     </div>
   );
 }
