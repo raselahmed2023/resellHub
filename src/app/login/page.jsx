@@ -39,10 +39,12 @@ export default function LoginPage() {
     }, 500);
   };
 
-  const handleGoogle = async () => {
-    setError("");
-    await signIn.social({ provider: "google", callbackURL: "/dashboard" });
-  };
+  const handleGoogleLogin = async () => {
+  await signIn.social({
+    provider: "google",
+    callbackURL: `${window.location.origin}/dashboard`,
+  });
+};
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
@@ -60,7 +62,7 @@ export default function LoginPage() {
           </div>
 
           <button
-            onClick={handleGoogle}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-medium text-sm py-3 rounded-lg transition-colors shadow-sm"
           >
             <svg width="18" height="18" viewBox="0 0 48 48">
