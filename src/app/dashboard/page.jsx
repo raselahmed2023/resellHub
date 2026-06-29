@@ -10,24 +10,22 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isPending) return;
 
-    if (!session?.user) {
-      router.replace("/login");
-      return;
-    }
+    const timer = setTimeout(() => {
+      if (!session?.user) {
+        router.replace("/login");
+        return;
+      }
 
-    const role = session.user.role || "buyer";
+      const role = session.user.role || "buyer";
 
-    if (role === "buyer") {
-      router.replace("/dashboard/buyer");
-    } else if (role === "seller") {
-      router.replace("/dashboard/seller");
-    } else if (role === "admin") {
-      router.replace("/dashboard/admin");
-    } else {
-      router.replace("/dashboard/buyer");
-    }
+      if (role === "buyer") router.replace("/dashboard/buyer");
+      else if (role === "seller") router.replace("/dashboard/seller");
+      else if (role === "admin") router.replace("/dashboard/admin");
+      else router.replace("/dashboard/buyer");
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [session, isPending, router]);
-
 
   return <div>Loading...</div>;
 }
