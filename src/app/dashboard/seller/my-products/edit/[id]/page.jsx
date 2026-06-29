@@ -296,13 +296,14 @@ export default function EditProduct() {
                         <div key={`new-${i}`} className="relative w-16 h-16">
                           <img src={img.preview} alt="" className="w-full h-full object-cover rounded-xl border-2 border-blue-200" />
                           <button
-                            type="button" onClick={() => removeNewImage(i)} 
+                            type="button" onClick={() => removeNewImage(i)}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center shadow"
                           >
                             <X size={10} />
                           </button>
                         </div>
                       ))}
-                   
+
                     </div>
                   )}
                 </div>
