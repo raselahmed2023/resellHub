@@ -1,7 +1,48 @@
-import { CircleCheckFill } from "@gravity-ui/icons";
-import { Chip } from "@heroui/react";
-import { LogOut } from "lucide-react";
+"use client";
+
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  LayoutDashboard,
+  Package,
+  Heart,
+  CreditCard,
+  User,
+  PlusCircle,
+  List,
+  Truck,
+  BarChart3,
+  Users,
+  LogOut,
+} from "lucide-react";
+import { Chip } from "@heroui/react";
+import { CircleCheckFill } from "@gravity-ui/icons";
+import { signOut } from "@/lib/auth-client";
+
+const menuConfig = {
+  buyer: [
+    { label: "Overview", href: "/dashboard/buyer", icon: LayoutDashboard },
+    { label: "My Orders", href: "/dashboard/buyer/orders", icon: Package },
+    { label: "Wishlist", href: "/dashboard/buyer/wishlist", icon: Heart },
+    { label: "Payments", href: "/dashboard/buyer/payments", icon: CreditCard },
+    { label: "Profile", href: "/dashboard/buyer/profile", icon: User },
+  ],
+  seller: [
+    { label: "Overview", href: "/dashboard/seller", icon: LayoutDashboard },
+    { label: "Add Product", href: "/dashboard/seller/add-product", icon: PlusCircle },
+    { label: "My Products", href: "/dashboard/seller/my-products", icon: List },
+    { label: "Manage Orders", href: "/dashboard/seller/manage-orders", icon: Truck, badge: "3" },
+    { label: "Analytics", href: "/dashboard/seller/analytics", icon: BarChart3 },
+    { label: "Profile", href: "/dashboard/seller/profile", icon: User },
+  ],
+  admin: [
+    { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
+    { label: "Manage Users", href: "/dashboard/admin/users", icon: Users },
+    { label: "Manage Products", href: "/dashboard/admin/products", icon: List },
+    { label: "Manage Orders", href: "/dashboard/admin/orders", icon: Truck },
+    { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+  ],
+};
 
 export default function Sidebar({ role, user }) {
   const pathname = usePathname();
@@ -42,7 +83,7 @@ export default function Sidebar({ role, user }) {
         {user?.image ? (
           <img
             src={user.image}
-            alt={user.name}
+            alt={user?.name || "User"}
             className="w-9 h-9 rounded-full object-cover shadow-sm"
           />
         ) : (
