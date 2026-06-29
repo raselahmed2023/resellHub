@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }) {
     if (res.ok) session = await res.json();
   } catch (err) {}
 
-  if (!session?.user) redirect('/login');
+  // if (!session?.user) redirect('/login');
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9' }}>
