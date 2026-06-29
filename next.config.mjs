@@ -1,6 +1,12 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: "/server/:path*",
+        destination: "https://resell-hub-server-two.vercel.app/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
