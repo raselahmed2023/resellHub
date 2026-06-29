@@ -6,11 +6,11 @@ const axiosSecure = axios.create({
   withCredentials: true,
 });
 
-
 axiosSecure.interceptors.request.use(async (config) => {
   const session = await authClient.getSession();
-  if (session?.data?.session?.token) {
-    config.headers["Authorization"] = `Bearer ${session.data.session.token}`;
+  const token = session?.data?.session?.token;
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });

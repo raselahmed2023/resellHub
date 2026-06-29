@@ -57,7 +57,7 @@ export default function MyOrders() {
     <div className="min-h-screen bg-slate-100 p-4 sm:p-6">
       <div className="max-w-5xl mx-auto">
 
-        {/* Header */}
+        {/* Heder */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md flex-shrink-0">
             <ShoppingBag size={20} color="black" />
