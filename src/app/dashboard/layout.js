@@ -12,16 +12,18 @@ export default async function DashboardLayout({ children }) {
 
   let session = null;
 
+  const authBaseURL =
+    process.env.NEXT_PUBLIC_AUTH_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "https://resell-hub-rho.vercel.app";
+
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/get-session`,
-      {
-        headers: {
-          cookie: allCookies,
-        },
-        cache: "no-store",
-      }
-    );
+    const res = await fetch(`${authBaseURL}/api/auth/get-session`, {
+      headers: {
+        cookie: allCookies,
+      },
+      cache: "no-store",
+    });
 
     if (res.ok) {
       session = await res.json();
