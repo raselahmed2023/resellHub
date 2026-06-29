@@ -9,18 +9,25 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (isPending) return;
-    if (!session) {
-      router.push("/login");
+
+    if (!session?.user) {
+      router.replace("/login");
       return;
     }
 
-    const role = session.user.role;
-    if (role === "buyer") router.push("/dashboard/buyer");
-    else if (role === "seller") router.push("/dashboard/seller");
-    else if (role === "admin") router.push("/dashboard/admin");
-    else router.push("/login");
-  }, [session, isPending]);
+    const role = session.user.role || "buyer";
 
-  
+    if (role === "buyer") {
+      router.replace("/dashboard/buyer");
+    } else if (role === "seller") {
+      router.replace("/dashboard/seller");
+    } else if (role === "admin") {
+      router.replace("/dashboard/admin");
+    } else {
+      router.replace("/dashboard/buyer");
+    }
+  }, [session, isPending, router]);
+
+
   return <div>Loading...</div>;
 }
