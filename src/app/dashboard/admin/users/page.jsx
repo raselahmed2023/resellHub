@@ -64,7 +64,7 @@ export default function AdminUsers() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-md">
-            <Users size={20} color="black" />
+            <Users size={20} color="white" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">Manage users</h1>
