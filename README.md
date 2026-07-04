@@ -14,7 +14,8 @@ ReSell Hub is a modern second-hand marketplace platform where users can buy and 
 
 **Backend API:** https://resell-hub-server-two.vercel.app
 
-
+**Client Site:** https://github.com/raselahmed2023/resellHub
+**Server Site:** https://github.com/raselahmed2023/resellHub-server
 
 
 ## Key Features
