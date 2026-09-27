@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+
 import {
   LayoutDashboard,
   Package,
@@ -15,21 +16,50 @@ import {
   Users,
   LogOut,
 } from "lucide-react";
+
 import { Chip } from "@heroui/react";
 import { CircleCheckFill } from "@gravity-ui/icons";
-import { signOut, useSession } from "@/lib/auth-client";
+
+import {
+  signOut,
+  useSession,
+} from "@/lib/auth-client";
 
 const menuConfig = {
   buyer: [
-    { label: "Overview", href: "/dashboard/buyer", icon: LayoutDashboard },
-    { label: "My Orders", href: "/dashboard/buyer/orders", icon: Package },
-    { label: "Wishlist", href: "/dashboard/buyer/wishlist", icon: Heart },
-    { label: "Payments", href: "/dashboard/buyer/payments", icon: CreditCard },
-    { label: "Profile", href: "/dashboard/buyer/profile", icon: User },
+    {
+      label: "Overview",
+      href: "/dashboard/buyer",
+      icon: LayoutDashboard,
+    },
+    {
+      label: "My Orders",
+      href: "/dashboard/buyer/orders",
+      icon: Package,
+    },
+    {
+      label: "Wishlist",
+      href: "/dashboard/buyer/wishlist",
+      icon: Heart,
+    },
+    {
+      label: "Payments",
+      href: "/dashboard/buyer/payments",
+      icon: CreditCard,
+    },
+    {
+      label: "Profile",
+      href: "/dashboard/buyer/profile",
+      icon: User,
+    },
   ],
 
   seller: [
-    { label: "Overview", href: "/dashboard/seller", icon: LayoutDashboard },
+    {
+      label: "Overview",
+      href: "/dashboard/seller",
+      icon: LayoutDashboard,
+    },
     {
       label: "Add Product",
       href: "/dashboard/seller/add-product",
@@ -44,143 +74,276 @@ const menuConfig = {
       label: "Manage Orders",
       href: "/dashboard/seller/manage-orders",
       icon: Truck,
-      badge: "3",
     },
     {
       label: "Analytics",
       href: "/dashboard/seller/analytics",
       icon: BarChart3,
     },
-    { label: "Profile", href: "/dashboard/seller/profile", icon: User },
+    {
+      label: "Profile",
+      href: "/dashboard/seller/profile",
+      icon: User,
+    },
   ],
 
   admin: [
-    { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
-    { label: "Manage Users", href: "/dashboard/admin/users", icon: Users },
-    { label: "Manage Products", href: "/dashboard/admin/products", icon: List },
-    { label: "Manage Orders", href: "/dashboard/admin/orders", icon: Truck },
-    { label: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+    {
+      label: "Overview",
+      href: "/dashboard/admin",
+      icon: LayoutDashboard,
+    },
+    {
+      label: "Manage Users",
+      href: "/dashboard/admin/users",
+      icon: Users,
+    },
+    {
+      label: "Manage Products",
+      href: "/dashboard/admin/products",
+      icon: List,
+    },
+    {
+      label: "Manage Orders",
+      href: "/dashboard/admin/orders",
+      icon: Truck,
+    },
+    {
+      label: "Analytics",
+      href: "/dashboard/admin/analytics",
+      icon: BarChart3,
+    },
   ],
 };
 
-export default function Sidebar({ role, user }) {
-  const pathname = usePathname();
-  const router = useRouter();
+const dashboardHome = {
+  buyer: "/dashboard/buyer",
+  seller: "/dashboard/seller",
+  admin: "/dashboard/admin",
+};
 
-  const { data: clientSession } = useSession();
-  const currentUser = user || clientSession?.user;
+export default function Sidebar({
+  role,
+  user,
+}) {
+  const pathname =
+    usePathname();
 
-  const pathRole = pathname.startsWith("/dashboard/admin")
-    ? "admin"
-    : pathname.startsWith("/dashboard/seller")
-    ? "seller"
-    : pathname.startsWith("/dashboard/buyer")
-    ? "buyer"
-    : role || currentUser?.role || "buyer";
+  const router =
+    useRouter();
 
-  const menuItems = menuConfig[pathRole] || menuConfig.buyer;
+  const {
+    data: clientSession,
+  } = useSession();
 
-  const handleSignOut = async () => {
-    await signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-          router.refresh();
-        },
-      },
-    });
-  };
+  const currentUser =
+    user ||
+    clientSession?.user;
+
+  /*
+   * IMPORTANT:
+   * Never determine account role
+   * from pathname.
+   *
+   * Use authenticated user role.
+   */
+  const accountRole =
+    role ||
+    currentUser?.role;
+
+  const isValidRole =
+    accountRole === "buyer" ||
+    accountRole === "seller" ||
+    accountRole === "admin";
+
+  const menuItems =
+    isValidRole
+      ? menuConfig[accountRole]
+      : [];
+
+  const homePath =
+    isValidRole
+      ? dashboardHome[accountRole]
+      : "/dashboard";
+
+  const handleSignOut =
+    async () => {
+      try {
+        await signOut();
+
+        router.replace(
+          "/"
+        );
+
+        router.refresh();
+      } catch (error) {
+        console.error(
+          "Sign out failed:",
+          error
+        );
+      }
+    };
+
+  const getInitial =
+    () => {
+      const name =
+        currentUser?.name?.trim();
+
+      if (!name) {
+        return "U";
+      }
+
+      return name
+        .charAt(0)
+        .toUpperCase();
+    };
 
   return (
     <aside className="w-full md:w-64 md:min-h-screen bg-white border-b md:border-b-0 md:border-r border-gray-200 flex flex-col font-sans">
-      {/* Logo + Role */}
+      {/* =========================
+          LOGO + ROLE
+      ========================== */}
+
       <div className="px-4 py-4 border-b border-gray-100">
         <Link
           href="/"
           className="flex items-center justify-center md:justify-start gap-2 mb-3"
         >
           <span className="font-extrabold text-lg text-gray-900">
-            Re<span className="text-emerald-500">Sell</span> Hub
+            Re
+            <span className="text-emerald-500">
+              Sell
+            </span>{" "}
+            Hub
           </span>
         </Link>
 
-        <div className="flex justify-center md:justify-start">
-          <Chip
-            color="success"
-            className="font-black uppercase text-xs flex items-center gap-2"
-          >
-            <CircleCheckFill width={12} />
-            {pathRole.toUpperCase()} ACCOUNT
-          </Chip>
-        </div>
+        {isValidRole && (
+          <div className="flex justify-center md:justify-start">
+            <Chip
+              color="success"
+              className="font-black uppercase text-xs flex items-center gap-2"
+            >
+              <CircleCheckFill
+                width={12}
+              />
+
+              {accountRole.toUpperCase()} ACCOUNT
+            </Chip>
+          </div>
+        )}
       </div>
 
-      {/* User Info */}
+      {/* =========================
+          USER INFO
+      ========================== */}
+
       <div className="px-4 py-4 flex items-center gap-3 border-b border-gray-100">
         {currentUser?.image ? (
           <img
             src={currentUser.image}
-            alt={currentUser?.name || "User"}
+            alt={
+              currentUser?.name ||
+              "User"
+            }
             className="w-10 h-10 rounded-full object-cover shadow-sm border border-emerald-100"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-            {currentUser?.name?.charAt(0).toUpperCase() || "U"}
+          <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+            {getInitial()}
           </div>
         )}
 
         <div className="min-w-0">
           <p className="text-sm font-bold text-gray-900 leading-tight truncate">
-            {currentUser?.name || "User"}
+            {currentUser?.name ||
+              "User"}
           </p>
+
           <p className="text-[11px] text-gray-500 truncate">
-            {currentUser?.email || ""}
+            {currentUser?.email ||
+              ""}
           </p>
         </div>
       </div>
 
-      {/* Nav Links */}
+      {/* =========================
+          NAVIGATION
+      ========================== */}
+
       <nav className="flex-1 p-3 md:p-4 flex md:block gap-2 md:space-y-1 overflow-x-auto md:overflow-visible">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
+        {menuItems.map(
+          (item) => {
+            const Icon =
+              item.icon;
 
-          const isActive =
-            pathname === item.href ||
-            (item.href !== `/dashboard/${pathRole}` &&
-              pathname.startsWith(item.href));
+            const isOverview =
+              item.href ===
+              homePath;
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`shrink-0 md:shrink flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
-                isActive
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-              }`}
-            >
-              <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+            const isActive =
+              pathname ===
+                item.href ||
+              (
+                !isOverview &&
+                pathname.startsWith(
+                  `${item.href}/`
+                )
+              );
 
-              <span>{item.label}</span>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`shrink-0 md:shrink flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
+                  isActive
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                }`}
+              >
+                <Icon
+                  size={18}
+                  strokeWidth={
+                    isActive
+                      ? 2.5
+                      : 2
+                  }
+                />
 
-              {item.badge && (
-                <span className="ml-auto bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-md font-bold">
-                  {item.badge}
+                <span>
+                  {item.label}
                 </span>
-              )}
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          }
+        )}
+
+        {!isValidRole && (
+          <div className="px-3 py-3 text-xs text-amber-600 bg-amber-50 rounded-lg">
+            Account role could not be determined.
+          </div>
+        )}
       </nav>
 
-      {/* Logout */}
+      {/* =========================
+          LOGOUT
+      ========================== */}
+
       <div className="p-3 md:p-4 border-t border-gray-100">
         <button
-          onClick={handleSignOut}
+          type="button"
+          onClick={
+            handleSignOut
+          }
           className="flex items-center justify-center md:justify-start gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg w-full transition-colors"
         >
-          <LogOut size={18} />
-          <span>Logout</span>
+          <LogOut
+            size={18}
+          />
+
+          <span>
+            Logout
+          </span>
         </button>
       </div>
     </aside>
