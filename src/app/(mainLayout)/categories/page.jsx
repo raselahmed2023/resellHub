@@ -175,33 +175,6 @@ export default function CategoriesPage() {
 
   return (
     <main className="min-h-screen bg-[#f7f9fb]">
-      <section className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:py-12">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-600">
-            Browse Marketplace
-          </p>
-
-          <div className="mt-3 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
-                Shop by Category
-              </h1>
-
-              <p className="mt-2 text-sm sm:text-base text-slate-500">
-                Choose a category and explore available products.
-              </p>
-            </div>
-
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
-            >
-              Browse all products
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-7 lg:py-10">
         <div className="lg:hidden mb-6 -mx-4 px-4 overflow-x-auto">
