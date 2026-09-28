@@ -6,23 +6,22 @@ import MarketplaceStats from "./home/MarketplaceStats";
 import SuccessStories from "@/components/SuccessStories";
 import TrustedSellersShowcase from "@/components/TrustedSellersShowcase";
 
-
 export const metadata = {
-  title: " ReSell Hub",
-  description: "",
+  title: "ReSellHub | Buy & Sell Pre-Owned Products",
+  description:
+    "Buy and sell pre-owned products on ReSellHub. Discover useful products, give items a second life, and connect with buyers and sellers.",
 };
 
 export default function Home() {
   return (
-    <div >
-      <HeroBanner></HeroBanner>
-
-      <FeaturedProducts></FeaturedProducts>
-      <PopularCategories></PopularCategories>
-      <SuccessStories></SuccessStories>
-      <MarketplaceStats></MarketplaceStats>
-      <SustainabilityImpact></SustainabilityImpact>
-      <TrustedSellersShowcase></TrustedSellersShowcase>
+    <div>
+      <HeroBanner />
+      <FeaturedProducts />
+      <PopularCategories />
+      <SuccessStories />
+      <MarketplaceStats />
+      <SustainabilityImpact />
+      <TrustedSellersShowcase />
     </div>
   );
 }
