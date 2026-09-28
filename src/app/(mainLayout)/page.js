@@ -5,6 +5,7 @@ import PopularCategories from "./home/PopularCategories";
 import MarketplaceStats from "./home/MarketplaceStats";
 import SuccessStories from "@/components/SuccessStories";
 import TrustedSellersShowcase from "@/components/TrustedSellersShowcase";
+import ReSellGuide from "@/components/ReSellGuide";
 
 export const metadata = {
   title: "ReSellHub | Buy & Sell Pre-Owned Products",
@@ -22,6 +23,7 @@ export default function Home() {
       <MarketplaceStats />
       <SustainabilityImpact />
       <TrustedSellersShowcase />
+      <ReSellGuide />
     </div>
   );
 }
