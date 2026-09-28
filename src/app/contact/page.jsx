@@ -10,7 +10,9 @@ import {
   Clock,
   MessageCircle,
   CheckCircle,
+  Loader2,
 } from "lucide-react";
+import axiosSecure from "@/lib/axiosSecure";
 
 const contactInfo = [
   {
@@ -48,31 +50,91 @@ export default function ContactPage() {
   });
 
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+
+    if (error) {
+      setError("");
+    }
+
+    if (sent) {
+      setSent(false);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setSent(true);
-    setForm({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+    if (loading) return;
 
-    setTimeout(() => setSent(false), 3500);
+    setLoading(true);
+    setError("");
+    setSent(false);
+
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    };
+
+    if (payload.name.length < 2) {
+      setError("Please enter your full name.");
+      setLoading(false);
+      return;
+    }
+
+    if (!payload.email) {
+      setError("Please enter your email address.");
+      setLoading(false);
+      return;
+    }
+
+    if (payload.subject.length < 3) {
+      setError("Please enter a subject.");
+      setLoading(false);
+      return;
+    }
+
+    if (payload.message.length < 10) {
+      setError("Please write a little more about how we can help.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await axiosSecure.post("/api/contact", payload);
+
+      setSent(true);
+
+      setForm({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error("Contact form error:", err);
+
+      setError(
+        err?.response?.data?.message ||
+          "Could not send your message. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <main className="min-h-screen bg-slate-100">
-      {/* Header */}
       <section className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
           <motion.div
@@ -99,39 +161,44 @@ export default function ContactPage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Contact Info */}
           <div className="lg:col-span-1 space-y-4">
-            {contactInfo.map(({ icon: Icon, title, value, text }, index) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, x: -18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.35, delay: index * 0.05 }}
-                className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
-                    <Icon size={21} />
-                  </div>
+            {contactInfo.map(
+              ({ icon: Icon, title, value, text }, index) => (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, x: -18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.35,
+                    delay: index * 0.05,
+                  }}
+                  className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                      <Icon size={21} />
+                    </div>
 
-                  <div>
-                    <h3 className="text-sm font-black text-gray-900">
-                      {title}
-                    </h3>
-                    <p className="text-sm font-semibold text-emerald-600 mt-1">
-                      {value}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 leading-5">
-                      {text}
-                    </p>
+                    <div>
+                      <h3 className="text-sm font-black text-gray-900">
+                        {title}
+                      </h3>
+
+                      <p className="text-sm font-semibold text-emerald-600 mt-1">
+                        {value}
+                      </p>
+
+                      <p className="text-xs text-gray-500 mt-1 leading-5">
+                        {text}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            )}
           </div>
 
-          {/* Form */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -148,6 +215,7 @@ export default function ContactPage() {
                 <h2 className="text-xl font-black text-gray-900">
                   Send us a message
                 </h2>
+
                 <p className="text-xs text-gray-500 mt-1">
                   Fill out the form below and we will respond soon.
                 </p>
@@ -161,77 +229,124 @@ export default function ContactPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
+            {error && (
+              <div className="mb-5 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
+                {error}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleSubmit}
+              className="grid sm:grid-cols-2 gap-4"
+            >
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">
+                <label
+                  htmlFor="contact-name"
+                  className="text-xs font-semibold text-gray-600"
+                >
                   Full Name
                 </label>
+
                 <input
+                  id="contact-name"
                   required
+                  disabled={loading}
                   type="text"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                  autoComplete="name"
+                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">
+                <label
+                  htmlFor="contact-email"
+                  className="text-xs font-semibold text-gray-600"
+                >
                   Email Address
                 </label>
+
                 <input
+                  id="contact-email"
                   required
+                  disabled={loading}
                   type="email"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
                   placeholder="name@example.com"
-                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                  autoComplete="email"
+                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="sm:col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">
+                <label
+                  htmlFor="contact-subject"
+                  className="text-xs font-semibold text-gray-600"
+                >
                   Subject
                 </label>
+
                 <input
+                  id="contact-subject"
                   required
+                  disabled={loading}
                   type="text"
                   name="subject"
                   value={form.subject}
                   onChange={handleChange}
                   placeholder="How can we help?"
-                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                  className="w-full h-11 bg-slate-50 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:ring-2 focus:ring-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="sm:col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600">
+                <label
+                  htmlFor="contact-message"
+                  className="text-xs font-semibold text-gray-600"
+                >
                   Message
                 </label>
+
                 <textarea
+                  id="contact-message"
                   required
+                  disabled={loading}
                   name="message"
                   value={form.message}
                   onChange={handleChange}
                   placeholder="Write your message..."
                   rows={6}
-                  className="w-full bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none resize-none focus:ring-2 focus:ring-emerald-400 transition"
+                  className="w-full bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none resize-none focus:ring-2 focus:ring-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="sm:col-span-2 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
                 <p className="text-xs text-gray-400">
-                  For order-related issues, include your transaction ID if available.
+                  For order-related issues, include your transaction ID if
+                  available.
                 </p>
 
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition"
                 >
-                  Send Message <Send size={16} />
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send size={16} />
+                    </>
+                  )}
                 </button>
               </div>
             </form>
