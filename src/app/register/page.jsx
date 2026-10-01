@@ -89,7 +89,7 @@ async function saveSelectedRole(role) {
   if (!response.ok) {
     throw new Error(
       data?.message ||
-        "Account was created, but your account type could not be saved."
+      "Account was created, but your account type could not be saved."
     );
   }
 
@@ -145,13 +145,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      /*
-       * STEP 1
-       * Create Better Auth account.
-       *
-       * IMPORTANT:
-       * We DO NOT send role here.
-       */
+
       if (!accountCreated) {
         const { error: signUpError } = await signUp.email({
           name: form.name.trim(),
@@ -163,34 +157,17 @@ export default function RegisterPage() {
         if (signUpError) {
           throw new Error(
             signUpError.message ||
-              "Registration failed. Please try again."
+            "Registration failed. Please try again."
           );
         }
 
-        /*
-         * Better Auth normally creates a session
-         * after successful email registration.
-         *
-         * Keep this state so if role saving fails,
-         * clicking submit again doesn't create
-         * the same account twice.
-         */
+
         setAccountCreated(true);
       }
 
-      /*
-       * STEP 2
-       * Send ONLY buyer/seller to our own
-       * protected backend endpoint.
-       */
       await saveSelectedRole(role);
 
-      /*
-       * STEP 3
-       * Registration completed.
-       *
-       * Sign out so the user can log in normally.
-       */
+
       await signOut();
 
       router.push("/login?registered=true");
@@ -199,7 +176,7 @@ export default function RegisterPage() {
 
       setError(
         err?.message ||
-          "Something went wrong during registration."
+        "Something went wrong during registration."
       );
     } finally {
       setLoading(false);
@@ -216,31 +193,19 @@ export default function RegisterPage() {
     setGoogleLoading(true);
 
     try {
-      /*
-       * Google handles authentication first.
-       *
-       * After OAuth completes, user returns to
-       * /auth/complete-role.
-       *
-       * That page will call:
-       * POST /api/users/select-role
-       *
-       * The backend STILL decides whether
-       * the requested role is allowed.
-       */
       const callbackURL =
         `${window.location.origin}` +
         `/auth/complete-role?role=${encodeURIComponent(role)}`;
 
       const { error: googleError } = await signIn.social({
         provider: "google",
+        requestSignUp: true,
         callbackURL,
       });
-
       if (googleError) {
         throw new Error(
           googleError.message ||
-            "Google registration failed."
+          "Google registration failed."
         );
       }
     } catch (err) {
@@ -248,7 +213,7 @@ export default function RegisterPage() {
 
       setError(
         err?.message ||
-          "Could not continue with Google."
+        "Could not continue with Google."
       );
 
       setGoogleLoading(false);
@@ -301,11 +266,10 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => handleRoleChange(key)}
                     aria-pressed={active}
-                    className={`relative text-left rounded-xl p-4 border-2 transition-all bg-white ${
-                      active
+                    className={`relative text-left rounded-xl p-4 border-2 transition-all bg-white ${active
                         ? "border-emerald-500 shadow-sm"
                         : "border-gray-200 hover:border-emerald-200"
-                    }`}
+                      }`}
                   >
                     {active && (
                       <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
@@ -538,9 +502,8 @@ export default function RegisterPage() {
                   : "Creating account..."
                 : accountCreated
                   ? "Finish Registration"
-                  : `Create ${
-                      role === "seller" ? "Seller" : "Buyer"
-                    } Account`}
+                  : `Create ${role === "seller" ? "Seller" : "Buyer"
+                  } Account`}
             </button>
           </form>
 
@@ -609,9 +572,8 @@ export default function RegisterPage() {
 
             {googleLoading
               ? "Connecting to Google..."
-              : `Continue with Google as ${
-                  role === "seller" ? "Seller" : "Buyer"
-                }`}
+              : `Continue with Google as ${role === "seller" ? "Seller" : "Buyer"
+              }`}
           </button>
 
           {/* Login */}
@@ -668,11 +630,10 @@ export default function RegisterPage() {
                   type="button"
                   onClick={() => handleRoleChange(key)}
                   aria-pressed={active}
-                  className={`text-left bg-white rounded-2xl p-5 shadow-sm border-2 transition-all relative ${
-                    active
+                  className={`text-left bg-white rounded-2xl p-5 shadow-sm border-2 transition-all relative ${active
                       ? "border-emerald-400 shadow-md -translate-y-0.5"
                       : "border-gray-100 hover:border-emerald-200"
-                  }`}
+                    }`}
                 >
                   {active && (
                     <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">

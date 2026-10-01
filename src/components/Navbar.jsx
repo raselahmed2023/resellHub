@@ -8,7 +8,6 @@ import { signOut, useSession } from "@/lib/auth-client";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
-  { label: "Categories", href: "/categories" },
   { label: "Dashboard", href: "/dashboard" },
 ];
 

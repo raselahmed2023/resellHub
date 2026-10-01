@@ -1,7 +1,6 @@
 import HeroBanner from "@/components/HeroBanner";
 import SustainabilityImpact from "@/components/SustainabilityImpact";
 import FeaturedProducts from "./home/FeaturedProducts";
-import PopularCategories from "./home/PopularCategories";
 import MarketplaceStats from "./home/MarketplaceStats";
 import SuccessStories from "@/components/SuccessStories";
 import TrustedSellersShowcase from "@/components/TrustedSellersShowcase";
@@ -18,7 +17,6 @@ export default function Home() {
     <div>
       <HeroBanner />
       <FeaturedProducts />
-      <PopularCategories />
       <SuccessStories />
       <MarketplaceStats />
       <SustainabilityImpact />
