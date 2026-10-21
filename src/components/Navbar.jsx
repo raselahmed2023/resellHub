@@ -5,67 +5,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "@/lib/auth-client";
 
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Products", href: "/products" },
-  { label: "Dashboard", href: "/dashboard" },
+const PUBLIC_LINKS = [
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Products",
+    href: "/products",
+  },
 ];
-
-const ROLE_LINKS = {
-  buyer: [
-    {
-      key: "profile",
-      label: "My Profile",
-      href: "/dashboard/buyer/profile",
-    },
-    {
-      key: "orders",
-      label: "My Orders",
-      href: "/dashboard/buyer/orders",
-    },
-    {
-      key: "wishlist",
-      label: "Wishlist",
-      href: "/dashboard/buyer/wishlist",
-    },
-  ],
-
-  seller: [
-    {
-      key: "profile",
-      label: "My Profile",
-      href: "/dashboard/seller/profile",
-    },
-    {
-      key: "products",
-      label: "My Products",
-      href: "/dashboard/seller/my-products",
-    },
-    {
-      key: "orders",
-      label: "Manage Orders",
-      href: "/dashboard/seller/manage-orders",
-    },
-  ],
-
-  admin: [
-    {
-      key: "users",
-      label: "Manage Users",
-      href: "/dashboard/admin/users",
-    },
-    {
-      key: "products",
-      label: "Manage Products",
-      href: "/dashboard/admin/products",
-    },
-    {
-      key: "orders",
-      label: "Manage Orders",
-      href: "/dashboard/admin/orders",
-    },
-  ],
-};
 
 const ROLE_DASHBOARD = {
   buyer: "/dashboard/buyer",
@@ -73,11 +22,58 @@ const ROLE_DASHBOARD = {
   admin: "/dashboard/admin",
 };
 
-export default function AppNavbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+const ROLE_LINKS = {
+  buyer: [
+    {
+      label: "My Profile",
+      href: "/dashboard/buyer/profile",
+    },
+    {
+      label: "My Orders",
+      href: "/dashboard/buyer/orders",
+    },
+    {
+      label: "Wishlist",
+      href: "/dashboard/buyer/wishlist",
+    },
+  ],
 
-  const dropdownRef = useRef(null);
+  seller: [
+    {
+      label: "My Profile",
+      href: "/dashboard/seller/profile",
+    },
+    {
+      label: "My Products",
+      href: "/dashboard/seller/my-products",
+    },
+    {
+      label: "Manage Orders",
+      href: "/dashboard/seller/manage-orders",
+    },
+  ],
+
+  admin: [
+    {
+      label: "Manage Users",
+      href: "/dashboard/admin/users",
+    },
+    {
+      label: "Manage Products",
+      href: "/dashboard/admin/products",
+    },
+    {
+      label: "Manage Orders",
+      href: "/dashboard/admin/orders",
+    },
+  ],
+};
+
+export default function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const profileRef = useRef(null);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -87,47 +83,45 @@ export default function AppNavbar() {
   const user = session?.user || null;
   const role = user?.role;
 
-  const validRole =
-    role === "buyer" ||
-    role === "seller" ||
-    role === "admin";
+  const validRole = ["buyer", "seller", "admin"].includes(role);
 
   const dashboardHref = validRole
     ? ROLE_DASHBOARD[role]
     : "/dashboard";
 
-  const dropdownItems = validRole
-    ? ROLE_LINKS[role]
-    : [];
+  const userLinks = validRole ? ROLE_LINKS[role] : [];
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleOutsideClick = (event) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
       ) {
-        setIsDropdownOpen(false);
+        setProfileOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
     };
   }, []);
 
   useEffect(() => {
-    setIsDropdownOpen(false);
-    setIsMenuOpen(false);
+    setMobileOpen(false);
+    setProfileOpen(false);
   }, [pathname]);
 
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     try {
       await signOut();
 
-      setIsDropdownOpen(false);
-      setIsMenuOpen(false);
+      setProfileOpen(false);
+      setMobileOpen(false);
 
       router.replace("/");
       router.refresh();
@@ -136,161 +130,143 @@ export default function AppNavbar() {
     }
   };
 
-  const isActiveLink = (href) => {
+  const isActive = (href) => {
     if (href === "/") {
       return pathname === "/";
     }
 
-    if (href === "/dashboard") {
-      return pathname.startsWith("/dashboard");
-    }
-
-    return (
-      pathname === href ||
-      pathname.startsWith(`${href}/`)
-    );
-  };
-
-  const getNavHref = (href) => {
-    if (href === "/dashboard" && user) {
-      return dashboardHref;
-    }
-
-    return href;
+    return pathname.startsWith(href);
   };
 
   const getInitial = () => {
-    const name = user?.name?.trim();
+    if (!user?.name) return "U";
 
-    if (!name) return "U";
-
-    return name.charAt(0).toUpperCase();
+    return user.name.charAt(0).toUpperCase();
   };
 
   return (
-    <nav className="bg-white border-b border-gray-100 shadow-sm w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2"
-            >
-              <span className="font-extrabold text-lg text-gray-900">
-                Re
-                <span className="text-emerald-500">
-                  Sell
-                </span>{" "}
-                Hub
+    <nav className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center"
+          >
+            <span className="text-xl font-black tracking-tight text-slate-950">
+              Re
+              <span className="text-emerald-600">
+                Sell
               </span>
-            </Link>
+              Hub
+            </span>
+          </Link>
+
+          {/* Desktop Public Navigation */}
+          <div className="hidden items-center gap-1 md:flex">
+            {PUBLIC_LINKS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                  isActive(item.href)
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
-          <div className="hidden sm:flex items-center gap-1">
-            {NAV_LINKS.map(({ label, href }) => {
-              const finalHref = getNavHref(href);
-              const active = isActiveLink(href);
+          {/* Desktop Account */}
+          <div className="hidden items-center gap-3 md:flex">
 
-              return (
-                <Link
-                  key={href}
-                  href={finalHref}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                    active
-                      ? "text-emerald-600 bg-emerald-50 font-semibold"
-                      : "text-gray-600 hover:text-emerald-600 hover:bg-gray-50"
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="hidden sm:flex items-center gap-2">
             {isPending ? (
-              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+              <div className="h-9 w-9 animate-pulse rounded-full bg-slate-200" />
             ) : user ? (
+
+              /* Logged-in Profile Dropdown */
               <div
+                ref={profileRef}
                 className="relative"
-                ref={dropdownRef}
               >
                 <button
                   type="button"
                   onClick={() =>
-                    setIsDropdownOpen((prev) => !prev)
+                    setProfileOpen((prev) => !prev)
                   }
-                  className="flex items-center gap-2 focus:outline-none"
+                  className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-slate-50"
                 >
                   {user.image ? (
                     <img
                       src={user.image}
                       alt={user.name || "User"}
-                      className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-400 ring-offset-2"
+                      className="h-9 w-9 rounded-full object-cover ring-2 ring-emerald-100"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-bold ring-2 ring-emerald-400 ring-offset-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-sm font-black text-white">
                       {getInitial()}
                     </div>
                   )}
 
-                  <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate hidden md:block">
-                    {user.name?.split(" ")[0] || "User"}
-                  </span>
+                  <div className="hidden text-left lg:block">
+                    <p className="max-w-[130px] truncate text-sm font-bold text-slate-800">
+                      {user.name || "User"}
+                    </p>
 
-                  <span className="text-gray-400 text-xs hidden md:block">
+                    {validRole && (
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        {role}
+                      </p>
+                    )}
+                  </div>
+
+                  <span className="text-xs text-slate-400">
                     ▾
                   </span>
                 </button>
 
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-100 rounded-lg shadow-lg py-1 z-50">
-                    <div className="px-4 py-3 border-b border-gray-100">
-                      <p className="text-sm font-semibold text-gray-800 truncate">
+                {profileOpen && (
+                  <div className="absolute right-0 mt-3 w-60 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl">
+
+                    {/* Account */}
+                    <div className="border-b border-slate-100 px-4 py-4">
+                      <p className="truncate text-sm font-black text-slate-900">
                         {user.name || "User"}
                       </p>
 
-                      <p className="text-xs text-gray-400 truncate">
-                        {user.email || ""}
+                      <p className="mt-1 truncate text-xs text-slate-400">
+                        {user.email}
                       </p>
-
-                      {validRole && (
-                        <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-1">
-                          {role} account
-                        </p>
-                      )}
                     </div>
 
-                    <Link
-                      href={dashboardHref}
-                      onClick={() =>
-                        setIsDropdownOpen(false)
-                      }
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Dashboard
-                    </Link>
+                    {/* Dashboard only exists here */}
+                    <div className="p-2">
+                      <Link
+                        href={dashboardHref}
+                        className="block rounded-xl px-3 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        Dashboard
+                      </Link>
 
-                    {dropdownItems.map(
-                      ({ key, label, href }) => (
+                      {userLinks.map((item) => (
                         <Link
-                          key={key}
-                          href={href}
-                          onClick={() =>
-                            setIsDropdownOpen(false)
-                          }
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          key={item.href}
+                          href={item.href}
+                          className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
                         >
-                          {label}
+                          {item.label}
                         </Link>
-                      )
-                    )}
+                      ))}
+                    </div>
 
-                    <div className="border-t border-gray-100 mt-1">
+                    <div className="border-t border-slate-100 p-2">
                       <button
                         type="button"
-                        onClick={handleSignOut}
-                        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                        onClick={handleLogout}
+                        className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-bold text-red-500 transition hover:bg-red-50"
                       >
                         Logout
                       </button>
@@ -302,128 +278,106 @@ export default function AppNavbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-emerald-600 px-3 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
+                  className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
                 >
                   Login
                 </Link>
 
                 <Link
                   href="/register"
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors"
+                  className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
                 >
-                  Register
+                  Join ReSellHub
                 </Link>
               </>
             )}
           </div>
 
-          <div className="sm:hidden flex items-center">
-            <button
-              type="button"
-              onClick={() =>
-                setIsMenuOpen((prev) => !prev)
-              }
-              className="text-gray-600 text-sm font-medium"
-            >
-              {isMenuOpen ? "Close" : "Menu"}
-            </button>
-          </div>
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            onClick={() =>
+              setMobileOpen((prev) => !prev)
+            }
+            className="rounded-lg px-3 py-2 text-sm font-bold text-slate-700 md:hidden"
+          >
+            {mobileOpen ? "Close" : "Menu"}
+          </button>
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="sm:hidden p-4 border-t border-gray-100">
-          {NAV_LINKS.map(({ label, href }) => {
-            const finalHref = getNavHref(href);
-            const active = isActiveLink(href);
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden">
 
-            return (
-              <Link
-                key={href}
-                href={finalHref}
-                onClick={() => setIsMenuOpen(false)}
-                className={`block py-3 border-b border-gray-50 text-sm font-medium transition-colors ${
-                  active
-                    ? "text-emerald-600 font-semibold"
-                    : "text-gray-700"
-                }`}
-              >
-                {label}
-              </Link>
-            );
-          })}
+          {PUBLIC_LINKS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`block rounded-xl px-3 py-3 text-sm font-semibold ${
+                isActive(item.href)
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "text-slate-700"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
 
           {user ? (
-            <>
-              <div className="py-3 border-b border-gray-50">
-                <p className="text-sm font-semibold text-gray-800">
-                  {user.name || "User"}
+            <div className="mt-3 border-t border-slate-100 pt-3">
+              <div className="mb-2 px-3 py-2">
+                <p className="text-sm font-black text-slate-900">
+                  {user.name}
                 </p>
 
-                <p className="text-xs text-gray-400">
-                  {user.email || ""}
+                <p className="text-xs text-slate-400">
+                  {user.email}
                 </p>
-
-                {validRole && (
-                  <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-1">
-                    {role} account
-                  </p>
-                )}
               </div>
 
+              {/* Only logged users see dashboard */}
               <Link
                 href={dashboardHref}
-                onClick={() => setIsMenuOpen(false)}
-                className="block py-3 border-b border-gray-50 text-sm text-gray-700 font-medium"
+                className="block rounded-xl px-3 py-3 text-sm font-bold text-emerald-700 hover:bg-emerald-50"
               >
                 Dashboard
               </Link>
 
-              {dropdownItems.map(
-                ({ key, label, href }) => (
-                  <Link
-                    key={key}
-                    href={href}
-                    onClick={() =>
-                      setIsMenuOpen(false)
-                    }
-                    className="block py-3 border-b border-gray-50 text-sm text-gray-700"
-                  >
-                    {label}
-                  </Link>
-                )
-              )}
+              {userLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded-xl px-3 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                >
+                  {item.label}
+                </Link>
+              ))}
 
               <button
                 type="button"
-                onClick={handleSignOut}
-                className="block w-full text-left py-3 text-sm text-red-500 font-medium"
+                onClick={handleLogout}
+                className="mt-2 block w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-red-500 hover:bg-red-50"
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
               <Link
                 href="/login"
-                onClick={() =>
-                  setIsMenuOpen(false)
-                }
-                className="block py-3 text-gray-700 border-b border-gray-50 text-sm"
+                className="flex h-11 items-center justify-center rounded-xl border border-slate-200 text-sm font-bold text-slate-700"
               >
                 Login
               </Link>
 
               <Link
                 href="/register"
-                onClick={() =>
-                  setIsMenuOpen(false)
-                }
-                className="block py-3 text-emerald-600 font-semibold text-sm"
+                className="flex h-11 items-center justify-center rounded-xl bg-emerald-600 text-sm font-bold text-white"
               >
                 Register
               </Link>
-            </>
+            </div>
           )}
         </div>
       )}
