@@ -1,27 +1,25 @@
 import HeroBanner from "@/components/HeroBanner";
 import FeaturedProducts from "./home/FeaturedProducts";
-import MarketplaceStats from "./home/MarketplaceStats";
 import HomeEcosystem from "@/components/HomeEcosystem";
-import HomeReuseImpact from "@/components/HomeReuseImpact";
+import MarketplaceStats from "./home/MarketplaceStats";
+import SustainabilityImpact from "@/components/SustainabilityImpact";
+import ReSellGuide from "@/components/ReSellGuide";
 
 export const metadata = {
-  title: "ReSellHub | Buy Smarter, Reuse Better",
+  title: "ReSellHub | Smarter Reuse for Bangladesh",
   description:
-    "A Bangladesh-focused second-hand marketplace built around affordability, community, reuse and smarter local resale.",
+    "Discover affordable pre-owned products, connect with local buyers and sellers, and keep useful products in circulation through ReSellHub.",
 };
 
 export default function Home() {
   return (
     <main>
       <HeroBanner />
-
       <FeaturedProducts />
-
       <HomeEcosystem />
-
       <MarketplaceStats />
-
-      <HomeReuseImpact />
+      <SustainabilityImpact />
+      <ReSellGuide />
     </main>
   );
 }
