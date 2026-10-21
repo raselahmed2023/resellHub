@@ -3,29 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Search,
-  ShoppingBag,
-  Sparkles,
-  WalletCards,
+  MessageCircleMore,
+  GraduationCap,
+  PackageCheck,
+  Repeat,
 } from "lucide-react";
-
-const QUICK_SEARCHES = [
-  "Mobile Phones",
-  "Books",
-  "Furniture",
-  "Electronics",
-];
 
 export default function HeroBanner() {
   const [query, setQuery] = useState("");
-
   const router = useRouter();
 
-  const handleSearch = (event) => {
-    event.preventDefault();
+  const handleSearch = (e) => {
+    e.preventDefault();
 
     const value = query.trim();
 
@@ -34,67 +27,45 @@ export default function HeroBanner() {
       return;
     }
 
-    router.push(
-      `/products?search=${encodeURIComponent(value)}`
-    );
+    router.push(`/products?search=${encodeURIComponent(value)}`);
   };
 
   return (
-    <section className="relative overflow-hidden border-b border-emerald-100/70 bg-[#f7faf8]">
+    <section className="relative overflow-hidden bg-[#f7faf8]">
+      {/* soft background blur */}
+      <div className="absolute -left-16 top-10 h-72 w-72 rounded-full bg-emerald-200/20 blur-3xl" />
+      <div className="absolute -right-16 bottom-0 h-80 w-80 rounded-full bg-cyan-100/30 blur-3xl" />
 
-      {/* Background */}
-      <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-emerald-200/30 blur-3xl" />
-
-      <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-orange-100/50 blur-3xl" />
-
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-
-        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_.9fr] lg:gap-16">
-
-          {/* Left */}
-          <div>
-
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_.95fr] lg:gap-16">
+          
+          {/* LEFT CONTENT */}
+          <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 py-2 text-xs font-black text-emerald-700 shadow-sm">
-              <Sparkles size={14} />
-
+              <Repeat size={14} />
               Smarter reuse for Bangladesh
             </div>
 
-            <h1 className="mt-6 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[58px]">
               Buy smarter.
               <br />
-
-              Sell what you
-              <span className="text-emerald-600">
-                {" "}
-                no longer use.
-              </span>
+              Sell with less waste.
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-              Find useful pre-owned products for less,
-              recover value from things sitting unused,
-              and give good products another useful life.
+            <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
+              Find affordable pre-owned products and recover value from things
+              you no longer use.
             </p>
 
             {/* Search */}
-            <form
-              onSubmit={handleSearch}
-              className="mt-8 max-w-2xl"
-            >
-              <div className="flex items-center rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_16px_50px_rgba(15,23,42,0.08)] transition focus-within:border-emerald-300 focus-within:ring-4 focus-within:ring-emerald-100/70">
-
-                <Search
-                  size={20}
-                  className="ml-3 flex-none text-slate-400"
-                />
+            <form onSubmit={handleSearch} className="mt-8 max-w-xl">
+              <div className="flex items-center rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_16px_40px_rgba(15,23,42,0.07)] transition focus-within:border-emerald-300 focus-within:ring-4 focus-within:ring-emerald-100/70">
+                <Search size={20} className="ml-3 flex-none text-slate-400" />
 
                 <input
                   type="text"
                   value={query}
-                  onChange={(event) =>
-                    setQuery(event.target.value)
-                  }
+                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="What are you looking for?"
                   className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
                 />
@@ -108,122 +79,184 @@ export default function HeroBanner() {
               </div>
             </form>
 
-            {/* Quick Search */}
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-              <span className="font-bold text-slate-600">
-                Popular:
-              </span>
-
-              {QUICK_SEARCHES.map((item) => (
-                <Link
-                  key={item}
-                  href={`/products?category=${encodeURIComponent(
-                    item
-                  )}`}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold transition hover:border-emerald-300 hover:text-emerald-700"
-                >
-                  {item}
-                </Link>
-              ))}
-            </div>
-
             {/* CTA */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-wrap items-center gap-4">
               <Link
                 href="/products"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-6 text-sm font-black text-white transition hover:bg-slate-800"
               >
                 Browse products
-
                 <ArrowRight size={16} />
               </Link>
 
               <Link
                 href="/register"
-                className="inline-flex h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-6 text-sm font-black text-slate-800 transition hover:border-emerald-300 hover:text-emerald-700"
+                className="text-sm font-bold text-emerald-700 transition hover:text-emerald-800"
               >
                 Start selling
               </Link>
             </div>
           </div>
 
-          {/* Right Psychology Card */}
+          {/* RIGHT ANIMATION */}
           <div className="relative">
-            <div className="rounded-[2rem] border border-white/80 bg-white/90 p-6 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur">
+            <div className="relative mx-auto h-[420px] w-full max-w-[520px] overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_25px_80px_rgba(15,23,42,0.10)] backdrop-blur">
+              
+              {/* background layers */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-cyan-50" />
+              <div className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-100/60 blur-2xl" />
 
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600">
-                The ReSell mindset
-              </p>
+              {/* center card */}
+              <motion.div
+                initial={{ y: 0 }}
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute left-1/2 top-1/2 z-10 w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-slate-200 bg-white p-5 shadow-xl"
+              >
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600">
+                  Live ReSell Flow
+                </p>
 
-              <h2 className="mt-2 text-2xl font-black text-slate-950">
-                Value first.
-                <br />
-                Waste less.
-              </h2>
+                <h3 className="mt-2 text-xl font-black text-slate-950">
+                  Simple. Useful. Local.
+                </h3>
 
-              <p className="mt-3 text-sm leading-6 text-slate-500">
-                People do not need to come here only to
-                save the environment. They come to save
-                money or recover value. Reuse becomes
-                the positive result.
-              </p>
+                <div className="mt-5 space-y-3">
+                  <MiniStep text="Browse product" />
+                  <MiniStep text="Chat and make offer" />
+                  <MiniStep text="Community pickup or exchange" />
+                </div>
+              </motion.div>
 
-              <div className="mt-6 space-y-3">
-
-                {/* Money */}
-                <div className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4">
-
-                  <div className="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-                    <WalletCards size={21} />
+              {/* floating card 1 */}
+              <motion.div
+                animate={{
+                  y: [0, -18, 0],
+                  x: [0, 10, 0],
+                  rotate: [0, 2, 0],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute left-6 top-10 z-20 w-52 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                    <MessageCircleMore size={18} />
                   </div>
 
                   <div>
                     <p className="text-sm font-black text-slate-900">
-                      Save or recover money
+                      Real-time Chat
                     </p>
-
-                    <p className="mt-1 text-xs leading-5 text-slate-500">
-                      Buy affordably or recover value
-                      from products you no longer use.
+                    <p className="text-xs text-slate-500">
+                      Talk before you deal
                     </p>
                   </div>
                 </div>
+              </motion.div>
 
-                {/* Reuse */}
-                <div className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4">
-
-                  <div className="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-blue-100 text-blue-700">
-                    <ShoppingBag size={21} />
+              {/* floating card 2 */}
+              <motion.div
+                animate={{
+                  y: [0, 16, 0],
+                  x: [0, -10, 0],
+                  rotate: [0, -2, 0],
+                }}
+                transition={{
+                  duration: 5.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.3,
+                }}
+                className="absolute right-6 top-16 z-20 w-52 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                    <GraduationCap size={18} />
                   </div>
 
                   <div>
                     <p className="text-sm font-black text-slate-900">
-                      Keep useful products moving
+                      Student Zone
                     </p>
-
-                    <p className="mt-1 text-xs leading-5 text-slate-500">
-                      What is unused for one person can
-                      still be valuable to someone else.
+                    <p className="text-xs text-slate-500">
+                      Campus-based exchange
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="mt-5 rounded-2xl bg-emerald-600 p-5 text-white">
+              {/* floating card 3 */}
+              <motion.div
+                animate={{
+                  y: [0, -14, 0],
+                  x: [0, 8, 0],
+                  rotate: [0, 1.5, 0],
+                }}
+                transition={{
+                  duration: 6.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+                className="absolute bottom-10 left-8 z-20 w-56 rounded-2xl border border-slate-200 bg-white p-4 shadow-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
+                    <PackageCheck size={18} />
+                  </div>
 
+                  <div>
+                    <p className="text-sm font-black text-slate-900">
+                      Community Pickup
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Local and convenient
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* floating card 4 */}
+              <motion.div
+                animate={{
+                  y: [0, 15, 0],
+                  x: [0, -8, 0],
+                  rotate: [0, -1.5, 0],
+                }}
+                transition={{
+                  duration: 6.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.8,
+                }}
+                className="absolute bottom-12 right-8 z-20 w-44 rounded-2xl border border-slate-200 bg-emerald-600 p-4 text-white shadow-lg"
+              >
                 <p className="text-xs font-bold text-emerald-100">
-                  Our simple principle
+                  Reuse Benefit
                 </p>
-
-                <p className="mt-1 text-lg font-black leading-7">
-                  Good products deserve another useful
-                  life.
+                <p className="mt-1 text-sm font-black">
+                  More value.
+                  <br />
+                  Less waste.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function MiniStep({ text }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-3 py-3">
+      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+      <p className="text-sm font-semibold text-slate-700">{text}</p>
+    </div>
   );
 }
